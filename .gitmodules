@@ -1,0 +1,6 @@
+[submodule "Node/Hardware/IPs/lbus_axis_converter"]
+	path = Node/Hardware/IPs/lbus_axis_converter
+	url = https://github.com/QianfengClarkShen/lbus_axis_converter.git
+[submodule "Node/Hardware/IPs/GULF-Stream"]
+	path = Node/Hardware/IPs/GULF-Stream
+	url = https://github.com/QianfengClarkShen/GULF-Stream.git
