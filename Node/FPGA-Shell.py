@@ -3,6 +3,8 @@
 import os
 import glob
 import xml.etree.ElementTree as et
+import subprocess
+import multiprocessing
 
 ###############################################################################################
 ######################################### Input/Output ########################################
@@ -110,6 +112,8 @@ else:
 BOARD = None
 FPGA = None
 ETH_100G = []
+ETH_100G_INTERFACES = []
+ETH_100G_CLOCKS = []
 VXLAN_100G = []
 PCIE = None
 DDR4 = []
@@ -129,6 +133,12 @@ for component in components:
             for ip in ips:
                 if ip.get("name") == "cmac_usplus":
                     ETH_100G.append(component.get("name"))
+                    interfaces = mode.find("interfaces")
+                    for iface in interfaces:
+                        if iface.get("optional") == "true":
+                            ETH_100G_CLOCKS.append(iface.get("name"))
+                        else:
+                            ETH_100G_INTERFACES.append(iface.get("name"))
     # elif component.get("sub_type") == "ddr":
     # elif component.get("sub_type") == "pci":
 BOARD += root.find("file_version").text
@@ -141,7 +151,9 @@ if not BOARD:
 if not ETH_100G:
     print_error("Board " + BOARDS[board] + " has no 100G interfaces. Our shell only supports 100G interfaces for now.")
     exit(3)
-ETH_100G = list(set(ETH_100G))
+if len(ETH_100G) != len(ETH_100G_INTERFACES) or len(ETH_100G) != len(ETH_100G_CLOCKS):
+    print_error("Could not correctly read all info about the 100G interfaces.")
+    exit(4)
 print_success("Board info read successfully. " + BOARDS[board] + " board has: ")
 print_info("\tBoard Name: " + BOARD)
 print_info("\tFPGA Name: " + FPGA)
@@ -160,3 +172,31 @@ with open("Parameters.tcl", "w") as script:
     print("set BOARD " + BOARD, file=script)
     print("set WORK_DIR " + os.getcwd() + "/Hardware/", file=script)
     print("set QSFP_COUNT " + str(len(ETH_100G)), file=script)
+    print("set QSFP_INTERFACES {", end="", file=script)
+    for iface in ETH_100G_INTERFACES:
+        print(iface, end=" ", file=script)
+    print("}", file=script)
+    print("set QSFP_CLOCKS {", end="", file=script)
+    for iface in ETH_100G_CLOCKS:
+        print(iface, end=" ", file=script)
+    print("}", file=script)
+print_success("Generated configuration.")
+
+###############################################################################################
+######################################## Prerequisites ########################################
+###############################################################################################
+try:
+    subprocess.run("git submodule init", shell=True, check=True)
+    subprocess.run("git submodule update", shell=True, check=True)
+    print_success("Cloned prerequisite IPs.")
+except subprocess.SubprocessError as e:
+    print_error("Could not clone prerequisite IPs: " + e)
+    exit(5)
+print_info("Building prerequisites.")
+try:
+    subprocess.run("cd Hardware/IPs/lbus_axis_converter && make gen_ip -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd Hardware/IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    print_success("Built prerequisite IPs.")
+except subprocess.SubprocessError as e:
+    print_error("Could not build prerequisite IPs: " + e)
+    exit(6)
