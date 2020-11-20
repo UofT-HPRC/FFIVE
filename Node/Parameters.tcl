@@ -4,3 +4,5 @@ set WORK_DIR /work/mewais/projects/FPGA-Cluster/Node/Hardware/
 set QSFP_COUNT 2
 set QSFP_INTERFACES {qsfp1_4x qsfp2_4x }
 set QSFP_CLOCKS {qsfp1_si570_clock qsfp2_mgt_si570_clock2 }
+set DDR4_COUNT 2
+set DDR4_INTERFACES {ddr4_sdram_c1 ddr4_sdram_c2 }

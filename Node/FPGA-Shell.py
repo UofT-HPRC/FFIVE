@@ -117,6 +117,7 @@ ETH_100G_CLOCKS = []
 VXLAN_100G = []
 PCIE = None
 DDR4 = []
+DDR4_SIZES = []
 DIMM = []
 
 root = et.parse(path + "/board.xml").getroot()
@@ -139,7 +140,13 @@ for component in components:
                             ETH_100G_CLOCKS.append(iface.get("name"))
                         else:
                             ETH_100G_INTERFACES.append(iface.get("name"))
-    # elif component.get("sub_type") == "ddr":
+    elif component.get("sub_type") == "ddr":
+        parameters = component.find("parameters")
+        for parameter in parameters:
+            if parameter.get("name") == "ddr_type" and parameter.get("value") == "ddr4":
+                DDR4.append(component.get("name"))
+            elif parameter.get("name") == "size":
+                DDR4_SIZES.append(parameter.get("value"))
     # elif component.get("sub_type") == "pci":
 BOARD += root.find("file_version").text
 if not FPGA:
@@ -154,15 +161,23 @@ if not ETH_100G:
 if len(ETH_100G) != len(ETH_100G_INTERFACES) or len(ETH_100G) != len(ETH_100G_CLOCKS):
     print_error("Could not correctly read all info about the 100G interfaces.")
     exit(4)
+if not DDR4:
+    print_warning("Board " + BOARDS[board] + " has no DDR4 interfaces.")
+if len(DDR4) != len(DDR4_SIZES):
+    print_error("Could not correctly read all info about the DDR4 interfaces.")
+    exit(5)
 print_success("Board info read successfully. " + BOARDS[board] + " board has: ")
 print_info("\tBoard Name: " + BOARD)
 print_info("\tFPGA Name: " + FPGA)
 print_info("\t100G Ethernet Interfaces: ")
 for eth in ETH_100G:
     print_info("\t\t" + eth)
+print_info("\tDDR4 Interfaces: ")
+for iface, size in zip(DDR4, DDR4_SIZES):
+    print_info("\t\t" + iface + ": " + size)
 for eth in ETH_100G:
     VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth))
-    # VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth), 0, Something)
+    # VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth), 0, Something)11
 
 ###############################################################################################
 #################################### Create Vivado Scripts ####################################
@@ -178,6 +193,11 @@ with open("Parameters.tcl", "w") as script:
     print("}", file=script)
     print("set QSFP_CLOCKS {", end="", file=script)
     for iface in ETH_100G_CLOCKS:
+        print(iface, end=" ", file=script)
+    print("}", file=script)
+    print("set DDR4_COUNT " + str(len(DDR4)), file=script)
+    print("set DDR4_INTERFACES {", end="", file=script)
+    for iface in DDR4:
         print(iface, end=" ", file=script)
     print("}", file=script)
 print_success("Generated configuration.")
