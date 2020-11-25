@@ -112,8 +112,6 @@ else:
 BOARD = None
 FPGA = None
 ETH_100G = []
-ETH_100G_INTERFACES = []
-ETH_100G_CLOCKS = []
 VXLAN_100G = []
 PCIE = None
 DDR4 = []
@@ -127,19 +125,13 @@ for component in components:
     if component.get("type") == "fpga":
         FPGA = component.get("part_name")
         BOARD += component.get("name") + ":"
-    if component.get("sub_type") == "sfp":
+    elif component.get("sub_type") == "sfp":
         modes = component.find("component_modes")
         for mode in modes:
             ips = mode.find("preferred_ips")
             for ip in ips:
                 if ip.get("name") == "cmac_usplus":
                     ETH_100G.append(component.get("name"))
-                    interfaces = mode.find("interfaces")
-                    for iface in interfaces:
-                        if iface.get("optional") == "true":
-                            ETH_100G_CLOCKS.append(iface.get("name"))
-                        else:
-                            ETH_100G_INTERFACES.append(iface.get("name"))
     elif component.get("sub_type") == "ddr":
         parameters = component.find("parameters")
         for parameter in parameters:
@@ -149,6 +141,7 @@ for component in components:
                 DDR4_SIZES.append(parameter.get("value"))
     # elif component.get("sub_type") == "pci":
 BOARD += root.find("file_version").text
+ETH_100G = list(set(ETH_100G))
 if not FPGA:
     print_error("Could not read FPGA part name from the board file.")
     exit(1)
@@ -158,14 +151,11 @@ if not BOARD:
 if not ETH_100G:
     print_error("Board " + BOARDS[board] + " has no 100G interfaces. Our shell only supports 100G interfaces for now.")
     exit(3)
-if len(ETH_100G) != len(ETH_100G_INTERFACES) or len(ETH_100G) != len(ETH_100G_CLOCKS):
-    print_error("Could not correctly read all info about the 100G interfaces.")
-    exit(4)
 if not DDR4:
     print_warning("Board " + BOARDS[board] + " has no DDR4 interfaces.")
 if len(DDR4) != len(DDR4_SIZES):
     print_error("Could not correctly read all info about the DDR4 interfaces.")
-    exit(5)
+    exit(4)
 print_success("Board info read successfully. " + BOARDS[board] + " board has: ")
 print_info("\tBoard Name: " + BOARD)
 print_info("\tFPGA Name: " + FPGA)
@@ -177,7 +167,7 @@ for iface, size in zip(DDR4, DDR4_SIZES):
     print_info("\t\t" + iface + ": " + size)
 for eth in ETH_100G:
     VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth))
-    # VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth), 0, Something)11
+    # VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth), 0, Something)
 
 ###############################################################################################
 #################################### Create Vivado Scripts ####################################
@@ -188,11 +178,7 @@ with open("Parameters.tcl", "w") as script:
     print("set WORK_DIR " + os.getcwd() + "/Hardware/", file=script)
     print("set QSFP_COUNT " + str(len(ETH_100G)), file=script)
     print("set QSFP_INTERFACES {", end="", file=script)
-    for iface in ETH_100G_INTERFACES:
-        print(iface, end=" ", file=script)
-    print("}", file=script)
-    print("set QSFP_CLOCKS {", end="", file=script)
-    for iface in ETH_100G_CLOCKS:
+    for iface in ETH_100G:
         print(iface, end=" ", file=script)
     print("}", file=script)
     print("set DDR4_COUNT " + str(len(DDR4)), file=script)
@@ -210,7 +196,7 @@ try:
     subprocess.run("git submodule update", shell=True, check=True)
     print_success("Cloned prerequisite IPs.")
 except subprocess.SubprocessError as e:
-    print_error("Could not clone prerequisite IPs: " + e)
+    print_error("Could not clone prerequisite IPs: " + str(e))
     exit(5)
 print_info("Building prerequisites.")
 try:
@@ -218,5 +204,14 @@ try:
     subprocess.run("cd Hardware/IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
-    print_error("Could not build prerequisite IPs: " + e)
+    print_error("Could not build prerequisite IPs: " + str(e))
     exit(6)
+
+###############################################################################################
+######################################### Build Shell #########################################
+###############################################################################################
+try:
+    subprocess.run("vivado -nolog -nojournal -mode batch -source FPGA-Shell.tcl", shell=True, check=True)
+except subprocess.SubprocessError as e:
+    print_error("Could not build shell: " + str(e))
+    exit(7)

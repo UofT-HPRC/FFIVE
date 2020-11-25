@@ -1,3 +1,6 @@
+# Create DDR4 Hierarchy
+create_bd_cell -type hier DDR4
+
 # Create ports
 create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 DDR4/cpu_mem
 create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 DDR4/fpga_mem
