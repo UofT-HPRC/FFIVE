@@ -48,7 +48,7 @@ def read_yesno(string, prefer_yes = False, prefer_no = False):
 
 def read_number(string, lower_limit=None, upper_limit=None):
     prompt = "\033[1;35;48m[FPGA-Shell]\033[1;37;0m " + string
-    if lower_limit and upper_limit:
+    if lower_limit is not None and upper_limit:
         prompt += " (" + str(lower_limit) + "-" + str(upper_limit) + "): "
     elif lower_limit:
         prompt += " (min: " + str(lower_limit) + "): "
@@ -205,7 +205,7 @@ for eth in HS_ETH:
 with open("Parameters.tcl", "w") as script:
     print("set FPGA " + FPGA, file=script)
     print("set BOARD " + BOARD, file=script)
-    print("set WORK_DIR " + os.getcwd() + "/Hardware/", file=script)
+    print("set WORK_DIR " + os.getcwd() + "/", file=script)
     print("set QSFP_COUNT " + str(len(HS_ETH)), file=script)
     print("set QSFP_INTERFACES {", end="", file=script)
     for iface in HS_ETH:
@@ -238,8 +238,8 @@ except subprocess.SubprocessError as e:
     exit(5)
 print_info("Building prerequisites.")
 try:
-    subprocess.run("cd Hardware/IPs/lbus_axis_converter && make gen_ip -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
-    subprocess.run("cd Hardware/IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd IPs/lbus_axis_converter && make gen_ip -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))
