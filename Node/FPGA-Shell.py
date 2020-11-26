@@ -111,7 +111,10 @@ else:
 ###############################################################################################
 BOARD = None
 FPGA = None
-ETH_100G = []
+HS_ETH = set()
+HS_ETH_FQS = {}         # Dict of lists, allowed freqs per interface
+HS_ETH_FQ = {}          # Dict, picked freq per interface
+HS_ETH_100G_USED = False
 VXLAN_100G = []
 PCIE = None
 DDR4 = []
@@ -131,7 +134,23 @@ for component in components:
             ips = mode.find("preferred_ips")
             for ip in ips:
                 if ip.get("name") == "cmac_usplus":
-                    ETH_100G.append(component.get("name"))
+                    HS_ETH.add(component.get("name"))
+                    if component.get("name") not in HS_ETH_FQS:
+                        HS_ETH_FQS[component.get("name")] = set()
+                    HS_ETH_FQS[component.get("name")].add("100G")
+                    HS_ETH_100G_USED = True
+                elif ip.get("name") == "xxv_ethernet":
+                    HS_ETH.add(component.get("name"))
+                    if component.get("name") not in HS_ETH_FQS:
+                        HS_ETH_FQS[component.get("name")] = set()
+                    HS_ETH_FQS[component.get("name")].add("10G")
+                    HS_ETH_FQS[component.get("name")].add("25G")
+                elif ip.get("name") == "l_ethernet":
+                    HS_ETH.add(component.get("name"))
+                    if component.get("name") not in HS_ETH_FQS:
+                        HS_ETH_FQS[component.get("name")] = set()
+                    HS_ETH_FQS[component.get("name")].add("40G")
+                    HS_ETH_FQS[component.get("name")].add("50G")
     elif component.get("sub_type") == "ddr":
         parameters = component.find("parameters")
         for parameter in parameters:
@@ -141,15 +160,15 @@ for component in components:
                 DDR4_SIZES.append(parameter.get("value"))
     # elif component.get("sub_type") == "pci":
 BOARD += root.find("file_version").text
-ETH_100G = list(set(ETH_100G))
+HS_ETH = list(HS_ETH)
 if not FPGA:
     print_error("Could not read FPGA part name from the board file.")
     exit(1)
 if not BOARD:
     print_error("Could not read board name from the board file.")
     exit(2)
-if not ETH_100G:
-    print_error("Board " + BOARDS[board] + " has no 100G interfaces. Our shell only supports 100G interfaces for now.")
+if not HS_ETH:
+    print_error("Board " + BOARDS[board] + " has no high speed ethernet interfaces. Our shell only supports high speed ethernet interfaces for now.")
     exit(3)
 if not DDR4:
     print_warning("Board " + BOARDS[board] + " has no DDR4 interfaces.")
@@ -159,13 +178,24 @@ if len(DDR4) != len(DDR4_SIZES):
 print_success("Board info read successfully. " + BOARDS[board] + " board has: ")
 print_info("\tBoard Name: " + BOARD)
 print_info("\tFPGA Name: " + FPGA)
-print_info("\t100G Ethernet Interfaces: ")
-for eth in ETH_100G:
-    print_info("\t\t" + eth)
+print_info("\tHigh Speed Ethernet Interfaces: ")
+for eth in HS_ETH:
+    HS_ETH_FQS[eth] = list(HS_ETH_FQS[eth])
+    HS_ETH_FQS[eth].sort(key=lambda x: int(x.split("G")[0]))
+    print_info("\t\t" + eth + ": [" + ", ".join(HS_ETH_FQS[eth]) + "]")
 print_info("\tDDR4 Interfaces: ")
 for iface, size in zip(DDR4, DDR4_SIZES):
     print_info("\t\t" + iface + ": " + size)
-for eth in ETH_100G:
+
+###############################################################################################
+####################################### Read User Config ######################################
+###############################################################################################
+for eth in HS_ETH:
+    print_success("The following speeds are supported on " + eth + ": ")
+    for i in range(len(HS_ETH_FQS[eth])):
+        print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
+    HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
+for eth in HS_ETH:
     VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth))
     # VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth), 0, Something)
 
@@ -176,11 +206,19 @@ with open("Parameters.tcl", "w") as script:
     print("set FPGA " + FPGA, file=script)
     print("set BOARD " + BOARD, file=script)
     print("set WORK_DIR " + os.getcwd() + "/Hardware/", file=script)
-    print("set QSFP_COUNT " + str(len(ETH_100G)), file=script)
+    print("set QSFP_COUNT " + str(len(HS_ETH)), file=script)
     print("set QSFP_INTERFACES {", end="", file=script)
-    for iface in ETH_100G:
+    for iface in HS_ETH:
         print(iface, end=" ", file=script)
     print("}", file=script)
+    print("set QSFP_SPEEDS {", end="", file=script)
+    for iface in HS_ETH:
+        print(HS_ETH_FQ[iface], end=" ", file=script)
+    print("}", file=script)
+    if HS_ETH_100G_USED:
+        print("set QSFP_100_USED true", file=script)
+    else:
+        print("set QSFP_100_USED false", file=script)
     print("set DDR4_COUNT " + str(len(DDR4)), file=script)
     print("set DDR4_INTERFACES {", end="", file=script)
     for iface in DDR4:
@@ -210,8 +248,8 @@ except subprocess.SubprocessError as e:
 ###############################################################################################
 ######################################### Build Shell #########################################
 ###############################################################################################
-try:
-    subprocess.run("vivado -nolog -nojournal -mode batch -source FPGA-Shell.tcl", shell=True, check=True)
-except subprocess.SubprocessError as e:
-    print_error("Could not build shell: " + str(e))
-    exit(7)
+# try:
+#     subprocess.run("vivado -nolog -nojournal -mode batch -source FPGA-Shell.tcl", shell=True, check=True)
+# except subprocess.SubprocessError as e:
+#     print_error("Could not build shell: " + str(e))
+#     exit(7)
