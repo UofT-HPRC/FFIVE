@@ -4,3 +4,6 @@
 [submodule "Node/Hardware/IPs/GULF-Stream"]
 	path = Hardware/IPs/GULF-Stream
 	url = https://github.com/QianfengClarkShen/GULF-Stream.git
+[submodule "Hardware/IPs/IPLibrary"]
+	path = Hardware/IPs/IPLibrary
+	url = https://github.com/mewais/IPLibrary.git
