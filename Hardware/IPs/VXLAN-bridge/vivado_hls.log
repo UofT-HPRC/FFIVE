@@ -1,0 +1,134 @@
+
+****** Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2018.3 (64-bit)
+  **** SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
+  **** IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+    ** Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+
+source /work/mewais/programs/Xilinx/Vivado/2018.3/scripts/vivado_hls/hls.tcl -notrace
+INFO: [HLS 200-10] Running '/work/mewais/programs/Xilinx/Vivado/2018.3/bin/unwrapped/lnx64.o/vivado_hls'
+INFO: [HLS 200-10] For user 'mewais' on host 'ZenBook-UX534FT' (Linux_x86_64 version 5.8.0-38-generic) on Wed Jan 27 13:57:50 EST 2021
+INFO: [HLS 200-10] On os Ubuntu 20.10
+INFO: [HLS 200-10] In directory '/work/mewais/projects/FPGA-Shell/Hardware/IPs/VXLAN-bridge'
+INFO: [HLS 200-10] Opening project '/work/mewais/projects/FPGA-Shell/Hardware/IPs/VXLAN-bridge/vxlan_bridge'.
+INFO: [HLS 200-10] Adding design file 'vxlan_bridge.cpp' to the project
+INFO: [HLS 200-10] Opening solution '/work/mewais/projects/FPGA-Shell/Hardware/IPs/VXLAN-bridge/vxlan_bridge/solution1'.
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 3ns.
+INFO: [HLS 200-10] Setting target device to 'xcu250-figd2104-2L-e'
+INFO: [SCHED 204-61] Option 'relax_ii_for_timing' is enabled, will increase II to preserve clock frequency constraints.
+INFO: [HLS 200-10] Analyzing design file 'vxlan_bridge.cpp' ... 
+WARNING: [HLS 214-111] Static scalars and arrays declared inside a dataflow region will be treated like local variables: vxlan_bridge.cpp:55:20
+WARNING: [HLS 200-471] Dataflow form checks found 1 issue(s) in file vxlan_bridge.cpp
+WARNING: [HLS 200-41] Resource core 'AXI4Stream' on port '&network_in' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4Stream' on port '&network_out' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4Stream' on port '&user_in' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4Stream' on port '&user_out' is deprecated. Please use the interface directive to specify the AXI interface.
+INFO: [HLS 200-111] Finished Linking Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 445.801 ; gain = 0.000 ; free physical = 3230 ; free virtual = 40875
+INFO: [HLS 200-111] Finished Checking Pragmas Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 445.801 ; gain = 0.000 ; free physical = 3230 ; free virtual = 40875
+INFO: [HLS 200-10] Starting code transformations ...
+INFO: [HLS 200-111] Finished Standard Transforms Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 445.801 ; gain = 0.000 ; free physical = 3224 ; free virtual = 40869
+INFO: [HLS 200-10] Checking synthesizability ...
+INFO: [HLS 200-111] Finished Checking Synthesizability Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 445.801 ; gain = 0.000 ; free physical = 3221 ; free virtual = 40866
+INFO: [XFORM 203-1101] Packing variable 'network_in.V' (vxlan_bridge.cpp:30) into a 577-bit variable.
+INFO: [XFORM 203-1101] Packing variable 'network_out.V' (vxlan_bridge.cpp:31) into a 641-bit variable.
+INFO: [XFORM 203-1101] Packing variable 'user_in.V' (vxlan_bridge.cpp:32) into a 577-bit variable.
+INFO: [XFORM 203-1101] Packing variable 'user_out.V' (vxlan_bridge.cpp:33) into a 577-bit variable.
+INFO: [XFORM 203-712] Applying dataflow to function 'vxlan_bridge', detected/extracted 1 process function(s): 
+	 'Block_codeRepl184_proc57'.
+INFO: [XFORM 203-401] Performing if-conversion on hyperblock to (vxlan_bridge.cpp:204:3) in function 'Block_codeRepl184_proc57'... converting 3 basic blocks.
+INFO: [XFORM 203-401] Performing if-conversion on hyperblock to (vxlan_bridge.cpp:231:3) in function 'Block_codeRepl184_proc57'... converting 3 basic blocks.
+INFO: [HLS 200-111] Finished Pre-synthesis Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 546.520 ; gain = 100.719 ; free physical = 3196 ; free virtual = 40841
+WARNING: [XFORM 203-631] Renaming function 'Block_codeRepl184_proc57' to 'Block_codeRepl184_pr' (vxlan_bridge.cpp:11:3)
+INFO: [HLS 200-111] Finished Architecture Synthesis Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 546.520 ; gain = 100.719 ; free physical = 3194 ; free virtual = 40838
+INFO: [HLS 200-10] Starting hardware synthesis ...
+INFO: [HLS 200-10] Synthesizing 'vxlan_bridge' ...
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'Block_codeRepl184_pr' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111]  Elapsed time: 9.28 seconds; current allocated memory: 89.804 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111]  Elapsed time: 0.04 seconds; current allocated memory: 90.690 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'vxlan_bridge' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111]  Elapsed time: 0.07 seconds; current allocated memory: 90.781 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111]  Elapsed time: 0.03 seconds; current allocated memory: 90.929 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'Block_codeRepl184_pr' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'Block_codeRepl184_pr'.
+INFO: [HLS 200-111]  Elapsed time: 0.06 seconds; current allocated memory: 91.766 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'vxlan_bridge' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/network_in_V' to 'ap_fifo'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/network_out_V' to 'ap_fifo'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/user_in_V' to 'ap_fifo'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/user_out_V' to 'ap_fifo'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/vni_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/ip_addr_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/local_port_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'vxlan_bridge/remote_port_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on function 'vxlan_bridge' to 'ap_ctrl_none'.
+INFO: [RTGEN 206-100] Finished creating RTL model for 'vxlan_bridge'.
+INFO: [HLS 200-111]  Elapsed time: 0.17 seconds; current allocated memory: 94.315 MB.
+INFO: [IMPL 213-200] Port 'network_in_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'network_in_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'network_in_V.last' is mapped to 'TLAST' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.last' is mapped to 'TLAST' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.id' is mapped to 'TID' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.dest' is mapped to 'TDEST' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.user' is mapped to 'TUSER' by default.
+INFO: [IMPL 213-200] Port 'user_in_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'user_in_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'user_in_V.last' is mapped to 'TLAST' by default.
+INFO: [IMPL 213-200] Port 'user_out_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'user_out_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'user_out_V.last' is mapped to 'TLAST' by default.
+INFO: [HLS 200-111] Finished generating all RTL models Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 546.520 ; gain = 100.719 ; free physical = 3153 ; free virtual = 40798
+INFO: [SYSC 207-301] Generating SystemC RTL for vxlan_bridge.
+INFO: [VHDL 208-304] Generating VHDL RTL for vxlan_bridge.
+INFO: [VLOG 209-307] Generating Verilog RTL for vxlan_bridge.
+INFO: [IMPL 213-8] Exporting RTL as a Vivado IP.
+INFO: [IMPL 213-200] Port 'network_in_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'network_in_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'network_in_V.last' is mapped to 'TLAST' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.last' is mapped to 'TLAST' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.id' is mapped to 'TID' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.dest' is mapped to 'TDEST' by default.
+INFO: [IMPL 213-200] Port 'network_out_V.user' is mapped to 'TUSER' by default.
+INFO: [IMPL 213-200] Port 'user_in_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'user_in_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'user_in_V.last' is mapped to 'TLAST' by default.
+INFO: [IMPL 213-200] Port 'user_out_V.data' is mapped to 'TDATA' by default.
+INFO: [IMPL 213-200] Port 'user_out_V.keep' is mapped to 'TKEEP' by default.
+INFO: [IMPL 213-200] Port 'user_out_V.last' is mapped to 'TLAST' by default.
+
+****** Vivado v2018.3 (64-bit)
+  **** SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
+  **** IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+    ** Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+
+source run_ippack.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/work/mewais/programs/Xilinx/Vivado/2018.3/data/ip'.
+INFO: [Common 17-206] Exiting Vivado at Wed Jan 27 13:58:11 2021...
+INFO: [HLS 200-112] Total elapsed time: 21.02 seconds; peak allocated memory: 94.315 MB.
+INFO: [Common 17-206] Exiting vivado_hls at Wed Jan 27 13:58:11 2021...

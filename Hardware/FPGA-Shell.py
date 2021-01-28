@@ -196,8 +196,7 @@ for eth in HS_ETH:
         print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
     HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
 for eth in HS_ETH:
-    VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth))
-    # VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth), 0, Something)
+    VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8))
 
 ###############################################################################################
 #################################### Create Vivado Scripts ####################################
@@ -219,6 +218,10 @@ with open("Parameters.tcl", "w") as script:
         print("set QSFP_100_USED true", file=script)
     else:
         print("set QSFP_100_USED false", file=script)
+    print("set VXLAN_INTERFACES {", end="", file=script)
+    for num in VXLAN_100G:
+        print(num, end=" ", file=script)
+    print("}", file=script)
     print("set DDR4_COUNT " + str(len(DDR4)), file=script)
     print("set DDR4_INTERFACES {", end="", file=script)
     for iface in DDR4:
@@ -229,6 +232,33 @@ print_success("Generated configuration.")
 ###############################################################################################
 ######################################## Prerequisites ########################################
 ###############################################################################################
+with open("IPs/VXLAN-bridge/VXLAN_bridge.tcl", "w") as script:
+    print("""open_project vxlan_bridge
+set_top vxlan_bridge
+add_files vxlan_bridge.cpp
+open_solution \"solution1\"
+set_part {""" + FPGA + """} -tool vivado
+create_clock -period 3 -name default
+config_compile
+config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
+config_rtl -encoding onehot -reset all -reset_level low
+csynth_design
+export_design -rtl verilog -format ip_catalog
+exit""", file=script)
+
+with open("IPs/AXI-GPIO/AXI_GPIO.tcl", "w") as script:
+    print("""open_project gpio
+set_top gpio
+add_files AXI_GPIO.cpp
+open_solution \"solution1\"
+set_part {""" + FPGA + """} -tool vivado
+create_clock -period 3 -name default
+config_compile
+config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
+config_rtl -encoding onehot -reset all -reset_level low
+csynth_design
+export_design -rtl verilog -format ip_catalog
+exit""", file=script)
 try:
     subprocess.run("git submodule init", shell=True, check=True)
     subprocess.run("git submodule update", shell=True, check=True)
@@ -241,6 +271,9 @@ try:
     subprocess.run("cd IPs/lbus_axis_converter && make gen_ip -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-RAM -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd IPs/IPLibrary && make AXI4S-Replicator -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd IPs/VXLAN-bridge && vivado_hls VXLAN_bridge.tcl", shell=True, check=True)
+    subprocess.run("cd IPs/AXI-GPIO && vivado_hls AXI_GPIO.tcl", shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))

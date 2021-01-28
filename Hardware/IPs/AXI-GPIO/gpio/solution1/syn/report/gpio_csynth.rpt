@@ -1,0 +1,239 @@
+
+
+================================================================
+== Vivado HLS Report for 'gpio'
+================================================================
+* Date:           Wed Jan 27 13:58:23 2021
+
+* Version:        2018.3 (Build 2405991 on Thu Dec 06 23:56:15 MST 2018)
+* Project:        gpio
+* Solution:       solution1
+* Product family: virtexuplus
+* Target device:  xcu250-figd2104-2L-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing (ns): 
+    * Summary: 
+    +--------+-------+----------+------------+
+    |  Clock | Target| Estimated| Uncertainty|
+    +--------+-------+----------+------------+
+    |ap_clk  |   3.00|     0.000|        0.38|
+    +--------+-------+----------+------------+
+
++ Latency (clock cycles): 
+    * Summary: 
+    +-----+-----+-----+-----+----------+
+    |  Latency  |  Interval | Pipeline |
+    | min | max | min | max |   Type   |
+    +-----+-----+-----+-----+----------+
+    |    0|    0|    1|    1| dataflow |
+    +-----+-----+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        +---------------+------------+-----+-----+-----+-----+---------+
+        |               |            |  Latency  |  Interval | Pipeline|
+        |    Instance   |   Module   | min | max | min | max |   Type  |
+        +---------------+------------+-----+-----+-----+-----+---------+
+        |Block_proc_U0  |Block_proc  |    0|    0|    0|    0|   none  |
+        +---------------+------------+-----+-----+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-------+---------+---------+------+
+|       Name      | BRAM_18K| DSP48E|    FF   |   LUT   | URAM |
++-----------------+---------+-------+---------+---------+------+
+|DSP              |        -|      -|        -|        -|     -|
+|Expression       |        -|      -|        -|        -|     -|
+|FIFO             |        -|      -|        -|        -|     -|
+|Instance         |        -|      -|     1410|      587|     -|
+|Memory           |        -|      -|        -|        -|     -|
+|Multiplexer      |        -|      -|        -|        -|     -|
+|Register         |        -|      -|        -|        -|     -|
++-----------------+---------+-------+---------+---------+------+
+|Total            |        0|      0|     1410|      587|     0|
++-----------------+---------+-------+---------+---------+------+
+|Available        |     5376|  12288|  3456000|  1728000|  1280|
++-----------------+---------+-------+---------+---------+------+
+|Utilization (%)  |        0|      0|    ~0   |    ~0   |     0|
++-----------------+---------+-------+---------+---------+------+
+
++ Detail: 
+    * Instance: 
+    +---------------+------------+---------+-------+------+-----+
+    |    Instance   |   Module   | BRAM_18K| DSP48E|  FF  | LUT |
+    +---------------+------------+---------+-------+------+-----+
+    |Block_proc_U0  |Block_proc  |        0|      0|  1410|  587|
+    +---------------+------------+---------+-------+------+-----+
+    |Total          |            |        0|      0|  1410|  587|
+    +---------------+------------+---------+-------+------+-----+
+
+    * DSP48: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    N/A
+
+    * Multiplexer: 
+    N/A
+
+    * Register: 
+    N/A
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++----------------+-----+-----+--------------+----------------+--------------+
+|    RTL Ports   | Dir | Bits|   Protocol   |  Source Object |    C Type    |
++----------------+-----+-----+--------------+----------------+--------------+
+|input_0_axi_V   |  in |   32|    ap_none   |  input_0_axi_V |    scalar    |
+|input_0_V       | out |   32|    ap_none   |    input_0_V   |    pointer   |
+|input_1_axi_V   |  in |   16|    ap_none   |  input_1_axi_V |    scalar    |
+|input_1_V       | out |   16|    ap_none   |    input_1_V   |    pointer   |
+|input_2_axi_V   |  in |   16|    ap_none   |  input_2_axi_V |    scalar    |
+|input_2_V       | out |   16|    ap_none   |    input_2_V   |    pointer   |
+|input_3_axi_V   |  in |   24|    ap_none   |  input_3_axi_V |    scalar    |
+|input_3_V       | out |   24|    ap_none   |    input_3_V   |    pointer   |
+|input_4_axi_V   |  in |   32|    ap_none   |  input_4_axi_V |    scalar    |
+|input_4_V       | out |   32|    ap_none   |    input_4_V   |    pointer   |
+|input_5_axi_V   |  in |   16|    ap_none   |  input_5_axi_V |    scalar    |
+|input_5_V       | out |   16|    ap_none   |    input_5_V   |    pointer   |
+|input_6_axi_V   |  in |   16|    ap_none   |  input_6_axi_V |    scalar    |
+|input_6_V       | out |   16|    ap_none   |    input_6_V   |    pointer   |
+|input_7_axi_V   |  in |   24|    ap_none   |  input_7_axi_V |    scalar    |
+|input_7_V       | out |   24|    ap_none   |    input_7_V   |    pointer   |
+|input_8_axi_V   |  in |   32|    ap_none   |  input_8_axi_V |    scalar    |
+|input_8_V       | out |   32|    ap_none   |    input_8_V   |    pointer   |
+|input_9_axi_V   |  in |   16|    ap_none   |  input_9_axi_V |    scalar    |
+|input_9_V       | out |   16|    ap_none   |    input_9_V   |    pointer   |
+|input_10_axi_V  |  in |   16|    ap_none   | input_10_axi_V |    scalar    |
+|input_10_V      | out |   16|    ap_none   |   input_10_V   |    pointer   |
+|input_11_axi_V  |  in |   24|    ap_none   | input_11_axi_V |    scalar    |
+|input_11_V      | out |   24|    ap_none   |   input_11_V   |    pointer   |
+|input_12_axi_V  |  in |   32|    ap_none   | input_12_axi_V |    scalar    |
+|input_12_V      | out |   32|    ap_none   |   input_12_V   |    pointer   |
+|input_13_axi_V  |  in |   16|    ap_none   | input_13_axi_V |    scalar    |
+|input_13_V      | out |   16|    ap_none   |   input_13_V   |    pointer   |
+|input_14_axi_V  |  in |   16|    ap_none   | input_14_axi_V |    scalar    |
+|input_14_V      | out |   16|    ap_none   |   input_14_V   |    pointer   |
+|input_15_axi_V  |  in |   24|    ap_none   | input_15_axi_V |    scalar    |
+|input_15_V      | out |   24|    ap_none   |   input_15_V   |    pointer   |
+|input_16_axi_V  |  in |   32|    ap_none   | input_16_axi_V |    scalar    |
+|input_16_V      | out |   32|    ap_none   |   input_16_V   |    pointer   |
+|input_17_axi_V  |  in |   16|    ap_none   | input_17_axi_V |    scalar    |
+|input_17_V      | out |   16|    ap_none   |   input_17_V   |    pointer   |
+|input_18_axi_V  |  in |   16|    ap_none   | input_18_axi_V |    scalar    |
+|input_18_V      | out |   16|    ap_none   |   input_18_V   |    pointer   |
+|input_19_axi_V  |  in |   24|    ap_none   | input_19_axi_V |    scalar    |
+|input_19_V      | out |   24|    ap_none   |   input_19_V   |    pointer   |
+|input_20_axi_V  |  in |   32|    ap_none   | input_20_axi_V |    scalar    |
+|input_20_V      | out |   32|    ap_none   |   input_20_V   |    pointer   |
+|input_21_axi_V  |  in |   16|    ap_none   | input_21_axi_V |    scalar    |
+|input_21_V      | out |   16|    ap_none   |   input_21_V   |    pointer   |
+|input_22_axi_V  |  in |   16|    ap_none   | input_22_axi_V |    scalar    |
+|input_22_V      | out |   16|    ap_none   |   input_22_V   |    pointer   |
+|input_23_axi_V  |  in |   24|    ap_none   | input_23_axi_V |    scalar    |
+|input_23_V      | out |   24|    ap_none   |   input_23_V   |    pointer   |
+|input_24_axi_V  |  in |   32|    ap_none   | input_24_axi_V |    scalar    |
+|input_24_V      | out |   32|    ap_none   |   input_24_V   |    pointer   |
+|input_25_axi_V  |  in |   16|    ap_none   | input_25_axi_V |    scalar    |
+|input_25_V      | out |   16|    ap_none   |   input_25_V   |    pointer   |
+|input_26_axi_V  |  in |   16|    ap_none   | input_26_axi_V |    scalar    |
+|input_26_V      | out |   16|    ap_none   |   input_26_V   |    pointer   |
+|input_27_axi_V  |  in |   24|    ap_none   | input_27_axi_V |    scalar    |
+|input_27_V      | out |   24|    ap_none   |   input_27_V   |    pointer   |
+|input_28_axi_V  |  in |   32|    ap_none   | input_28_axi_V |    scalar    |
+|input_28_V      | out |   32|    ap_none   |   input_28_V   |    pointer   |
+|input_29_axi_V  |  in |   16|    ap_none   | input_29_axi_V |    scalar    |
+|input_29_V      | out |   16|    ap_none   |   input_29_V   |    pointer   |
+|input_30_axi_V  |  in |   16|    ap_none   | input_30_axi_V |    scalar    |
+|input_30_V      | out |   16|    ap_none   |   input_30_V   |    pointer   |
+|input_31_axi_V  |  in |   24|    ap_none   | input_31_axi_V |    scalar    |
+|input_31_V      | out |   24|    ap_none   |   input_31_V   |    pointer   |
+|input_32_axi_V  |  in |   32|    ap_none   | input_32_axi_V |    scalar    |
+|input_32_V      | out |   32|    ap_none   |   input_32_V   |    pointer   |
+|input_33_axi_V  |  in |   16|    ap_none   | input_33_axi_V |    scalar    |
+|input_33_V      | out |   16|    ap_none   |   input_33_V   |    pointer   |
+|input_34_axi_V  |  in |   16|    ap_none   | input_34_axi_V |    scalar    |
+|input_34_V      | out |   16|    ap_none   |   input_34_V   |    pointer   |
+|input_35_axi_V  |  in |   24|    ap_none   | input_35_axi_V |    scalar    |
+|input_35_V      | out |   24|    ap_none   |   input_35_V   |    pointer   |
+|input_36_axi_V  |  in |   32|    ap_none   | input_36_axi_V |    scalar    |
+|input_36_V      | out |   32|    ap_none   |   input_36_V   |    pointer   |
+|input_37_axi_V  |  in |   16|    ap_none   | input_37_axi_V |    scalar    |
+|input_37_V      | out |   16|    ap_none   |   input_37_V   |    pointer   |
+|input_38_axi_V  |  in |   16|    ap_none   | input_38_axi_V |    scalar    |
+|input_38_V      | out |   16|    ap_none   |   input_38_V   |    pointer   |
+|input_39_axi_V  |  in |   24|    ap_none   | input_39_axi_V |    scalar    |
+|input_39_V      | out |   24|    ap_none   |   input_39_V   |    pointer   |
+|input_40_axi_V  |  in |   32|    ap_none   | input_40_axi_V |    scalar    |
+|input_40_V      | out |   32|    ap_none   |   input_40_V   |    pointer   |
+|input_41_axi_V  |  in |   16|    ap_none   | input_41_axi_V |    scalar    |
+|input_41_V      | out |   16|    ap_none   |   input_41_V   |    pointer   |
+|input_42_axi_V  |  in |   16|    ap_none   | input_42_axi_V |    scalar    |
+|input_42_V      | out |   16|    ap_none   |   input_42_V   |    pointer   |
+|input_43_axi_V  |  in |   24|    ap_none   | input_43_axi_V |    scalar    |
+|input_43_V      | out |   24|    ap_none   |   input_43_V   |    pointer   |
+|input_44_axi_V  |  in |   32|    ap_none   | input_44_axi_V |    scalar    |
+|input_44_V      | out |   32|    ap_none   |   input_44_V   |    pointer   |
+|input_45_axi_V  |  in |   16|    ap_none   | input_45_axi_V |    scalar    |
+|input_45_V      | out |   16|    ap_none   |   input_45_V   |    pointer   |
+|input_46_axi_V  |  in |   16|    ap_none   | input_46_axi_V |    scalar    |
+|input_46_V      | out |   16|    ap_none   |   input_46_V   |    pointer   |
+|input_47_axi_V  |  in |   24|    ap_none   | input_47_axi_V |    scalar    |
+|input_47_V      | out |   24|    ap_none   |   input_47_V   |    pointer   |
+|input_48_axi_V  |  in |   32|    ap_none   | input_48_axi_V |    scalar    |
+|input_48_V      | out |   32|    ap_none   |   input_48_V   |    pointer   |
+|input_49_axi_V  |  in |   16|    ap_none   | input_49_axi_V |    scalar    |
+|input_49_V      | out |   16|    ap_none   |   input_49_V   |    pointer   |
+|input_50_axi_V  |  in |   16|    ap_none   | input_50_axi_V |    scalar    |
+|input_50_V      | out |   16|    ap_none   |   input_50_V   |    pointer   |
+|input_51_axi_V  |  in |   24|    ap_none   | input_51_axi_V |    scalar    |
+|input_51_V      | out |   24|    ap_none   |   input_51_V   |    pointer   |
+|input_52_axi_V  |  in |   32|    ap_none   | input_52_axi_V |    scalar    |
+|input_52_V      | out |   32|    ap_none   |   input_52_V   |    pointer   |
+|input_53_axi_V  |  in |   16|    ap_none   | input_53_axi_V |    scalar    |
+|input_53_V      | out |   16|    ap_none   |   input_53_V   |    pointer   |
+|input_54_axi_V  |  in |   16|    ap_none   | input_54_axi_V |    scalar    |
+|input_54_V      | out |   16|    ap_none   |   input_54_V   |    pointer   |
+|input_55_axi_V  |  in |   24|    ap_none   | input_55_axi_V |    scalar    |
+|input_55_V      | out |   24|    ap_none   |   input_55_V   |    pointer   |
+|input_56_axi_V  |  in |   32|    ap_none   | input_56_axi_V |    scalar    |
+|input_56_V      | out |   32|    ap_none   |   input_56_V   |    pointer   |
+|input_57_axi_V  |  in |   16|    ap_none   | input_57_axi_V |    scalar    |
+|input_57_V      | out |   16|    ap_none   |   input_57_V   |    pointer   |
+|input_58_axi_V  |  in |   16|    ap_none   | input_58_axi_V |    scalar    |
+|input_58_V      | out |   16|    ap_none   |   input_58_V   |    pointer   |
+|input_59_axi_V  |  in |   24|    ap_none   | input_59_axi_V |    scalar    |
+|input_59_V      | out |   24|    ap_none   |   input_59_V   |    pointer   |
+|input_60_axi_V  |  in |   32|    ap_none   | input_60_axi_V |    scalar    |
+|input_60_V      | out |   32|    ap_none   |   input_60_V   |    pointer   |
+|input_61_axi_V  |  in |   16|    ap_none   | input_61_axi_V |    scalar    |
+|input_61_V      | out |   16|    ap_none   |   input_61_V   |    pointer   |
+|input_62_axi_V  |  in |   16|    ap_none   | input_62_axi_V |    scalar    |
+|input_62_V      | out |   16|    ap_none   |   input_62_V   |    pointer   |
+|input_63_axi_V  |  in |   24|    ap_none   | input_63_axi_V |    scalar    |
+|input_63_V      | out |   24|    ap_none   |   input_63_V   |    pointer   |
+|ap_clk          |  in |    1| ap_ctrl_none |      gpio      | return value |
+|ap_rst_n        |  in |    1| ap_ctrl_none |      gpio      | return value |
++----------------+-----+-----+--------------+----------------+--------------+
+

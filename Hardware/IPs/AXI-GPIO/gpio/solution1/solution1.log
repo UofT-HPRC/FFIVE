@@ -1,0 +1,269 @@
+==============================================================
+File generated on Wed Jan 27 13:56:40 EST 2021
+Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2018.3 (64-bit)
+SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
+IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+==============================================================
+==============================================================
+File generated on Wed Jan 27 13:58:12 EST 2021
+Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2018.3 (64-bit)
+SW Build 2405991 on Thu Dec  6 23:36:41 MST 2018
+IP Build 2404404 on Fri Dec  7 01:43:56 MST 2018
+Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+==============================================================
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 3ns.
+INFO: [HLS 200-10] Setting target device to 'xcu250-figd2104-2L-e'
+INFO: [SCHED 204-61] Option 'relax_ii_for_timing' is enabled, will increase II to preserve clock frequency constraints.
+WARNING: [HLS 200-40] Cannot find source file gpio.cpp; skipping it.
+INFO: [HLS 200-10] Analyzing design file 'AXI_GPIO.cpp' ... 
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_0_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_1_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_2_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_3_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_4_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_5_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_6_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_7_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_8_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_9_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_10_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_11_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_12_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_13_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_14_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_15_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_16_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_17_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_18_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_19_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_20_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_21_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_22_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_23_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_24_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_25_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_26_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_27_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_28_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_29_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_30_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_31_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_32_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_33_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_34_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_35_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_36_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_37_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_38_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_39_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_40_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_41_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_42_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_43_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_44_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_45_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_46_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_47_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_48_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_49_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_50_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_51_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_52_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_53_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_54_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_55_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_56_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_57_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_58_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_59_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_60_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_61_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_62_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+WARNING: [HLS 200-41] Resource core 'AXI4LiteS' on port '&input_63_axi' is deprecated. Please use the interface directive to specify the AXI interface.
+INFO: [HLS 200-111] Finished Linking Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 430.094 ; gain = 0.000 ; free physical = 3219 ; free virtual = 40870
+INFO: [HLS 200-111] Finished Checking Pragmas Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 430.094 ; gain = 0.000 ; free physical = 3219 ; free virtual = 40870
+INFO: [HLS 200-10] Starting code transformations ...
+INFO: [HLS 200-111] Finished Standard Transforms Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 430.094 ; gain = 0.000 ; free physical = 3218 ; free virtual = 40869
+INFO: [HLS 200-10] Checking synthesizability ...
+INFO: [HLS 200-111] Finished Checking Synthesizability Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 430.094 ; gain = 0.000 ; free physical = 3216 ; free virtual = 40867
+INFO: [XFORM 203-712] Applying dataflow to function 'gpio', detected/extracted 1 process function(s): 
+	 'Block__proc'.
+INFO: [HLS 200-111] Finished Pre-synthesis Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 546.520 ; gain = 116.426 ; free physical = 3193 ; free virtual = 40845
+INFO: [HLS 200-111] Finished Architecture Synthesis Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 546.520 ; gain = 116.426 ; free physical = 3189 ; free virtual = 40841
+INFO: [HLS 200-10] Starting hardware synthesis ...
+INFO: [HLS 200-10] Synthesizing 'gpio' ...
+WARNING: [SYN 201-103] Legalizing function name 'Block__proc' to 'Block_proc'.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'Block_proc' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111]  Elapsed time: 10.88 seconds; current allocated memory: 82.537 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111]  Elapsed time: 0.03 seconds; current allocated memory: 83.394 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'gpio' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111]  Elapsed time: 0.06 seconds; current allocated memory: 84.012 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111]  Elapsed time: 0.06 seconds; current allocated memory: 85.662 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'Block_proc' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'Block_proc'.
+INFO: [HLS 200-111]  Elapsed time: 0.06 seconds; current allocated memory: 86.394 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'gpio' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_0_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_0_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_0_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_1_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_1_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_1_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_2_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_2_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_2_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_3_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_3_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_3_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_4_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_4_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_4_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_5_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_5_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_5_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_6_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_6_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_6_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_7_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_7_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_7_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_8_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_8_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_8_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_9_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_9_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_9_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_10_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_10_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_10_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_11_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_11_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_11_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_12_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_12_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_12_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_13_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_13_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_13_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_14_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_14_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_14_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_15_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_15_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_15_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_16_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_16_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_16_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_17_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_17_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_17_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_18_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_18_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_18_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_19_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_19_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_19_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_20_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_20_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_20_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_21_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_21_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_21_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_22_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_22_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_22_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_23_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_23_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_23_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_24_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_24_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_24_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_25_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_25_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_25_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_26_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_26_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_26_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_27_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_27_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_27_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_28_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_28_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_28_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_29_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_29_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_29_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_30_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_30_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_30_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_31_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_31_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_31_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_32_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_32_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_32_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_33_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_33_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_33_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_34_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_34_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_34_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_35_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_35_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_35_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_36_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_36_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_36_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_37_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_37_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_37_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_38_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_38_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_38_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_39_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_39_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_39_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_40_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_40_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_40_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_41_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_41_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_41_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_42_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_42_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_42_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_43_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_43_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_43_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_44_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_44_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_44_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_45_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_45_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_45_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_46_axi_V' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'gpio/input_46_V' to 'ap_none'.
+WARNING: [RTGEN 206-101] Port 'input_46_V' with mode 'ap_none' may require an associated data valid signal to correctly communicate with other blocks or a test bench; automatic C/RTL co-simulation may not be able to verify such a port.
