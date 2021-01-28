@@ -1,0 +1,5 @@
+IPs/VXLAN-bridge/vxlan_bridge/
+IPs/AXI-GPIO/gpio/
+FPGA_Shell/
+**/*.log
+**/*.jou

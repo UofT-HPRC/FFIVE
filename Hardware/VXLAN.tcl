@@ -1,6 +1,22 @@
 # Top level VXLAN
 create_bd_cell -type hier VXLAN
 
+# Cores
+create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 VXLAN/axi_interconnect
+set_property -dict [list CONFIG.NUM_MI ${QSFP_COUNT}] [get_bd_cells VXLAN/axi_interconnect]
+
+# Interfaces
+create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 VXLAN/VXLAN_ctrl
+create_bd_pin -dir I VXLAN/VXLAN_ctrl_clk
+create_bd_pin -dir I VXLAN/VXLAN_ctrl_reset
+connect_bd_net [get_bd_pins VXLAN/VXLAN_ctrl_clk] [get_bd_pins VXLAN/axi_interconnect/ACLK]
+connect_bd_net [get_bd_pins VXLAN/VXLAN_ctrl_clk] [get_bd_pins VXLAN/axi_interconnect/S00_ACLK]
+connect_bd_net [get_bd_pins VXLAN/VXLAN_ctrl_reset] [get_bd_pins VXLAN/axi_interconnect/ARESETN]
+connect_bd_net [get_bd_pins VXLAN/VXLAN_ctrl_reset] [get_bd_pins VXLAN/axi_interconnect/S00_ARESETN]
+
+# Connections
+connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_ctrl] -boundary_type upper [get_bd_intf_pins VXLAN/axi_interconnect/S00_AXI]
+
 for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
     # Per QSFP VXLAN
     create_bd_cell -type hier VXLAN/VXLAN_$QSFP_INDEX
@@ -70,7 +86,6 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
     # Ports
     create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 VXLAN/network_${QSFP_INDEX}_rx
     create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 VXLAN/network_${QSFP_INDEX}_tx
-    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 VXLAN/VXLAN_${QSFP_INDEX}_ctrl
     create_bd_pin -dir I VXLAN/VXLAN_${QSFP_INDEX}_clk
     create_bd_pin -dir I VXLAN/VXLAN_${QSFP_INDEX}_reset
     for {set VXLAN_INDEX 0} {$VXLAN_INDEX < $VXLAN_COUNT} {incr VXLAN_INDEX} {
@@ -79,9 +94,11 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
     }
 
     # Connections
-    connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_ctrl] -boundary_type upper [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_ctrl]
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VXLAN/axi_interconnect/M0${QSFP_INDEX}_AXI] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_ctrl]
     connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}_clk] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/clk]
     connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}_reset] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reset]
+    connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}_clk] [get_bd_pins VXLAN/axi_interconnect/M0${QSFP_INDEX}_ACLK]
+    connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}_reset] [get_bd_pins VXLAN/axi_interconnect/M0${QSFP_INDEX}_ARESETN]
     for {set VXLAN_INDEX 0} {$VXLAN_INDEX < $VXLAN_COUNT} {incr VXLAN_INDEX} {
         connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}_tx]
         connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_rx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}_rx]

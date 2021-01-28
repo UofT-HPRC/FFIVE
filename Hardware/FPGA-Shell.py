@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import re
 import os
 import glob
 import xml.etree.ElementTree as et
@@ -116,10 +117,9 @@ HS_ETH_FQS = {}         # Dict of lists, allowed freqs per interface
 HS_ETH_FQ = {}          # Dict, picked freq per interface
 HS_ETH_100G_USED = False
 VXLAN_100G = []
-PCIE = None
 DDR4 = []
 DDR4_SIZES = []
-DIMM = []
+USE_ARM = False
 
 root = et.parse(path + "/board.xml").getroot()
 BOARD = root.get("vendor") + ":" + root.get("name") + ":"
@@ -175,9 +175,17 @@ if not DDR4:
 if len(DDR4) != len(DDR4_SIZES):
     print_error("Could not correctly read all info about the DDR4 interfaces.")
     exit(4)
+if FPGA[2] == "z" or FPGA[2] == "Z":
+    USE_ARM = True
+    pattern = re.compile("([a-zA-Z]+)([0-9]+)([a-zA-Z]+)")
+    core = pattern.match(FPGA).groups()[2]
 print_success("Board info read successfully. " + BOARDS[board] + " board has: ")
 print_info("\tBoard Name: " + BOARD)
 print_info("\tFPGA Name: " + FPGA)
+if USE_ARM and core.startswith("cg"):
+    print_info("\tDual Core ARM Cortex A53 Processor")
+elif USE_ARM:
+    print_info("\tQuad Core ARM Cortex A53 Processor")
 print_info("\tHigh Speed Ethernet Interfaces: ")
 for eth in HS_ETH:
     HS_ETH_FQS[eth] = list(HS_ETH_FQS[eth])
@@ -227,6 +235,10 @@ with open("Parameters.tcl", "w") as script:
     for iface in DDR4:
         print(iface, end=" ", file=script)
     print("}", file=script)
+    if USE_ARM:
+        print("set USE_ARM true", file=script)
+    else:
+        print("set USE_ARM false", file=script)
 print_success("Generated configuration.")
 
 ###############################################################################################
