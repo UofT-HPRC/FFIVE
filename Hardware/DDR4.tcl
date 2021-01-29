@@ -23,7 +23,8 @@ for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
 }
 
 # Configure cores
-set_property -dict [list CONFIG.NUM_SI {2} CONFIG.NUM_MI $DDR4_COUNT CONFIG.ENABLE_ADVANCED_OPTIONS {1} CONFIG.XBAR_DATA_WIDTH {512} CONFIG.SYNCHRONIZATION_STAGES {5}] [get_bd_cells DDR4/axi_interconnect]
+set MASTERS [expr $DDR4_COUNT * 2]
+set_property -dict [list CONFIG.NUM_SI {2} CONFIG.NUM_MI $MASTERS CONFIG.ENABLE_ADVANCED_OPTIONS {1} CONFIG.XBAR_DATA_WIDTH {512} CONFIG.SYNCHRONIZATION_STAGES {5}] [get_bd_cells DDR4/axi_interconnect]
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells DDR4/polarity_flipper]
 for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
 	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
@@ -39,20 +40,21 @@ connect_bd_net [get_bd_pins DDR4/cpu_mem_clk] [get_bd_pins DDR4/axi_interconnect
 connect_bd_net [get_bd_pins DDR4/fpga_mem_clk] [get_bd_pins DDR4/axi_interconnect/S01_ACLK]
 connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconnect/ARESETN]
 for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
+    set SECOND_INDEX [expr $DDR4_INDEX + $DDR4_COUNT]
 	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/ddr4_clk_$DDR4_INDEX] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_SYS_CLK]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/ddr4_$DDR4_INDEX] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_AXI] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4_S_AXI]
+	connect_bd_intf_net [get_bd_intf_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_AXI] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4_S_AXI_CTRL]
     connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_aresetn]
     connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_ARESETN]
+    connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_ARESETN]
+	connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_ACLK]
+	connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_ACLK]
+	connect_bd_net [get_bd_pins DDR4/polarity_flipper/Res] [get_bd_pins DDR4/$DDR4_INTERFACE/sys_rst]
 }
 
 # Connect others
 set DDR4_INTERFACE [lindex $DDR4_INTERFACES 0]
 connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/ACLK]
-for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
-	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
-	connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_ACLK]
-	connect_bd_net [get_bd_pins DDR4/polarity_flipper/Res] [get_bd_pins DDR4/$DDR4_INTERFACE/sys_rst]
-}
 connect_bd_net [get_bd_pins DDR4/global_reset] [get_bd_pins DDR4/polarity_flipper/Op1]

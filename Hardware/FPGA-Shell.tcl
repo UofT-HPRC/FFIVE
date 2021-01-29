@@ -81,6 +81,9 @@ if {$USE_ARM} {
     }
 }
 
+## Address Mapping
+source AddressMapping.tcl
+
 set_property target_language VHDL [current_project]
 validate_bd_design
 save_bd_design
