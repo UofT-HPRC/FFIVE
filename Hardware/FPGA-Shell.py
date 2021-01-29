@@ -8,6 +8,16 @@ import subprocess
 import multiprocessing
 
 ###############################################################################################
+########################################### Constants #########################################
+###############################################################################################
+VENDOR="UofT-HPRC"
+SHELL="FFIVE"
+VERSION_MAJOR=0
+VERSION_MINOR=1
+VERSION_PATCH=0
+SPEED_CODE={"10G": 0, "25G": 1, "40G": 2, "50G": 3, "100G": 4}
+
+###############################################################################################
 ######################################### Input/Output ########################################
 ###############################################################################################
 def print_success(string):
@@ -221,6 +231,32 @@ if DIV2 > 63:
 ###############################################################################################
 #################################### Create Vivado Scripts ####################################
 ###############################################################################################
+
+## 8 Words. Null terminated vendor string
+## 8 Words. Null terminated shell string
+## 1 Word. 1 reserved byte, 3 byte sized ints for version.
+## 3 Words. Reserved.
+## 12 Words. 2 reserved bytes, 1 byte for # of VXLANs per network, 1 nibble for network speed, 1 nibble for used or not
+if len(VENDOR) > 32:
+    VENDOR = VENDOR[0:31]
+VENDOR = VENDOR.encode("utf-8")
+VENDOR += bytes([0]*(32-len(VENDOR)))
+if len(SHELL) > 32:
+    SHELL = SHELL[0:31]
+SHELL = SHELL.encode("utf-8")
+SHELL += bytes([0]*(32-len(SHELL)))
+with open("AXI4_RAM.mif", "w") as mem:
+    for i in range(0, 32, 4):
+        print(VENDOR[i:i+4].hex(), file=mem)
+    for i in range(0, 32, 4):
+        print(SHELL[i:i+4].hex(), file=mem)
+    print(bytes([0, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH]).hex(), file=mem)
+    print(bytes([0, 0, 0, 0]).hex(), file=mem)
+    print(bytes([0, 0, 0, 0]).hex(), file=mem)
+    print(bytes([0, 0, 0, 0]).hex(), file=mem)
+    for i in range(len(HS_ETH)):
+        print(bytes([0, 0, VXLAN_100G[i], (SPEED_CODE[HS_ETH_FQ[HS_ETH[i]]] << 4) + 1]).hex(), file=mem)
+
 with open("Parameters.tcl", "w") as script:
     print("set FPGA " + FPGA, file=script)
     print("set BOARD " + BOARD, file=script)

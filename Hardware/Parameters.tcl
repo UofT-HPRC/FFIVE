@@ -9,4 +9,4 @@ set VXLAN_INTERFACES {3 4 }
 set DDR4_COUNT 1
 set DDR4_INTERFACES {ddr4_sdram }
 set USE_ARM true
-set CLOCK_DIVS {1 1}
+set CLOCK_DIVS {2 1}
