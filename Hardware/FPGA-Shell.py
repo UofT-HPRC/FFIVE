@@ -205,6 +205,18 @@ for eth in HS_ETH:
     HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
 for eth in HS_ETH:
     VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8))
+SPEED = read_number("Enter the frequency of the user VNF clock, in MHz", 1, 800)
+DIV1 = int(800/SPEED)
+if DIV1 == 0:
+    DIV1 = 1
+if DIV1 > 63:
+    DIV1 = 63
+new_speed = 800/DIV1
+DIV2 = int(new_speed/SPEED)
+if DIV2 == 0:
+    DIV2 = 1
+if DIV2 > 63:
+    DIV2 = 63
 
 ###############################################################################################
 #################################### Create Vivado Scripts ####################################
@@ -239,6 +251,7 @@ with open("Parameters.tcl", "w") as script:
         print("set USE_ARM true", file=script)
     else:
         print("set USE_ARM false", file=script)
+    print("set CLOCK_DIVS {" + str(DIV1) + " " + str(DIV2) + "}", file=script)
 print_success("Generated configuration.")
 
 ###############################################################################################
