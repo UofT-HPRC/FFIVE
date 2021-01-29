@@ -3,7 +3,7 @@ create_bd_cell -type hier VXLAN
 
 # Cores
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 VXLAN/axi_interconnect
-set_property -dict [list CONFIG.NUM_MI ${QSFP_COUNT}] [get_bd_cells VXLAN/axi_interconnect]
+set_property -dict [list CONFIG.NUM_MI ${QSFP_COUNT} CONFIG.ENABLE_ADVANCED_OPTIONS {1} CONFIG.XBAR_DATA_WIDTH {512} CONFIG.SYNCHRONIZATION_STAGES {5}] [get_bd_cells VXLAN/axi_interconnect]
 
 # Interfaces
 create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 VXLAN/VXLAN_ctrl

@@ -20,6 +20,7 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 DDR4/polarity_
 for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
 	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
 	create_bd_cell -type ip -vlnv xilinx.com:ip:ddr4:2.2 DDR4/$DDR4_INTERFACE
+    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 DDR4/${DDR4_INTERFACE}_reset_hub
 }
 
 # Configure cores
@@ -38,7 +39,6 @@ connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconne
 connect_bd_net [get_bd_pins DDR4/fpga_mem_reset] [get_bd_pins DDR4/axi_interconnect/S01_ARESETN]
 connect_bd_net [get_bd_pins DDR4/cpu_mem_clk] [get_bd_pins DDR4/axi_interconnect/S00_ACLK]
 connect_bd_net [get_bd_pins DDR4/fpga_mem_clk] [get_bd_pins DDR4/axi_interconnect/S01_ACLK]
-connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconnect/ARESETN]
 for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
     set SECOND_INDEX [expr $DDR4_INDEX + $DDR4_COUNT]
 	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
@@ -46,15 +46,18 @@ for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
 	connect_bd_intf_net [get_bd_intf_pins DDR4/ddr4_$DDR4_INDEX] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_AXI] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4_S_AXI]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_AXI] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4_S_AXI_CTRL]
-    connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_aresetn]
-    connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_ARESETN]
-    connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_ARESETN]
 	connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_ACLK]
 	connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_ACLK]
 	connect_bd_net [get_bd_pins DDR4/polarity_flipper/Res] [get_bd_pins DDR4/$DDR4_INTERFACE/sys_rst]
+    connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/${DDR4_INTERFACE}_reset_hub/slowest_sync_clk]
+    connect_bd_net [get_bd_pins DDR4/global_reset] [get_bd_pins DDR4/${DDR4_INTERFACE}_reset_hub/ext_reset_in]
+   	connect_bd_net [get_bd_pins DDR4/${DDR4_INTERFACE}_reset_hub/interconnect_aresetn] [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_aresetn]
+	connect_bd_net [get_bd_pins DDR4/${DDR4_INTERFACE}_reset_hub/interconnect_aresetn] [get_bd_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_ARESETN]
+	connect_bd_net [get_bd_pins DDR4/${DDR4_INTERFACE}_reset_hub/interconnect_aresetn] [get_bd_pins DDR4/axi_interconnect/M0${SECOND_INDEX}_ARESETN]
 }
 
 # Connect others
 set DDR4_INTERFACE [lindex $DDR4_INTERFACES 0]
 connect_bd_net [get_bd_pins DDR4/$DDR4_INTERFACE/c0_ddr4_ui_clk] [get_bd_pins DDR4/axi_interconnect/ACLK]
+connect_bd_net [get_bd_pins DDR4/${DDR4_INTERFACE}_reset_hub/interconnect_aresetn] [get_bd_pins DDR4/axi_interconnect/ARESETN]
 connect_bd_net [get_bd_pins DDR4/global_reset] [get_bd_pins DDR4/polarity_flipper/Op1]

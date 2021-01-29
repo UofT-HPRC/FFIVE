@@ -38,10 +38,13 @@ if {$DDR4_COUNT} {
 ## VNF
 source VNF.tcl
 
+## ID
+create_bd_cell -type ip -vlnv mohammad.ewais.ca:ME_IPs:AXI4_RAM:1.0 ID_RAM
+set_property -dict [list CONFIG.C_S00_AXI_AWUSER_WIDTH {1} CONFIG.C_S00_AXI_ARUSER_WIDTH {1} CONFIG.C_S00_AXI_WUSER_WIDTH {1} CONFIG.C_S00_AXI_RUSER_WIDTH {1} CONFIG.C_S00_AXI_BUSER_WIDTH {1}] [get_bd_cells ID_RAM]
+
 ## ARM
 if {$USE_ARM} {
     source ARM.tcl
-    create_bd_cell -type ip -vlnv mohammad.ewais.ca:ME_IPs:AXI4_RAM:1.0 ID_RAM
     connect_bd_intf_net [get_bd_intf_pins ID_RAM/s00_axi] -boundary_type upper [get_bd_intf_pins ARM/ID_access]
     connect_bd_net [get_bd_pins ID_RAM/s00_axi_aclk] [get_bd_pins ARM/config_clk]
     connect_bd_net [get_bd_pins ID_RAM/s00_axi_aresetn] [get_bd_pins ARM/config_reset]
@@ -84,6 +87,6 @@ if {$USE_ARM} {
 ## Address Mapping
 source AddressMapping.tcl
 
-set_property target_language VHDL [current_project]
-validate_bd_design
-save_bd_design
+# set_property target_language VHDL [current_project]
+# validate_bd_design
+# save_bd_design
