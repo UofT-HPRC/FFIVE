@@ -1,5 +1,12 @@
 IPs/VXLAN-bridge/vxlan_bridge/
 IPs/AXI-GPIO/gpio/
 FPGA_Shell/
+FPGA_Shell.cache/
+FPGA_Shell.hw/
+FPGA_Shell.ip_user_files/
+FPGA_Shell.runs/
+FPGA_Shell.sim/
+FPGA_Shell.xpr
+.Xil/
 **/*.log
 **/*.jou

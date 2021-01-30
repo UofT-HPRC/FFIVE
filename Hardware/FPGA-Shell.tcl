@@ -1,5 +1,5 @@
 source Parameters.tcl
-create_project FPGA_Shell -in_memory -part $FPGA
+create_project FPGA_Shell -part $FPGA
 set_property board_part $BOARD [current_project]
 set_property ip_repo_paths {"IPs/GULF-Stream/" "IPs/lbus_axis_converter" "IPs/VXLAN-bridge" "IPs/AXI-GPIO" "IPs/IPLibrary"} [current_project]
 update_ip_catalog -rebuild
@@ -13,9 +13,16 @@ source QSFP.tcl
 create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 init
 connect_bd_intf_net [get_bd_intf_ports init] -boundary_type upper [get_bd_intf_pins QSFP/init]
 for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
+    if {$QSFP_SPEED == "100G"} {
+        set CLOCK [get_property CONFIG.GT_REF_CLK_FREQ [get_bd_cells QSFP/QSFP_${QSFP_INDEX}/cmac]]
+        set CLOCK [expr int(1000000 * $CLOCK)]
+    } elseif {$QSFP_SPEED == "50G" || QSFP_SPEED == "40G"} {
+    } elseif {$QSFP_SPEED == "10G" || QSFP_SPEED == "25G"} {
+    }
     set QSFP_INTERFACE [lindex $QSFP_INTERFACES $QSFP_INDEX]
     create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gt_rtl:1.0 ${QSFP_INTERFACE}
     create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 QSFP_${QSFP_INDEX}_refclk
+    set_property -dict [list CONFIG.FREQ_HZ ${CLOCK}] [get_bd_intf_ports QSFP_${QSFP_INDEX}_refclk]
     
     connect_bd_intf_net -boundary_type upper [get_bd_intf_pins QSFP/QSFP_${QSFP_INDEX}_rx] [get_bd_intf_pins VXLAN/network_${QSFP_INDEX}_rx]
     connect_bd_intf_net -boundary_type upper [get_bd_intf_pins QSFP/QSFP_${QSFP_INDEX}_tx] [get_bd_intf_pins VXLAN/network_${QSFP_INDEX}_tx]
@@ -27,8 +34,11 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 if {$DDR4_COUNT} {
 	source DDR4.tcl
     for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
+        set CLOCK [get_property CONFIG.C0.DDR4_InputClockPeriod [get_bd_cells DDR4/ddr4_sdram]]
+        set CLOCK [expr int(1000000000000 / $CLOCK)]
 	    create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddr4_rtl:1.0 ddr4_${DDR4_INDEX}
 	    create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 ddr4_clk_${DDR4_INDEX}
+        set_property -dict [list CONFIG.FREQ_HZ ${CLOCK}] [get_bd_intf_ports ddr4_clk_${DDR4_INDEX}]
 
         connect_bd_intf_net [get_bd_intf_ports ddr4_${DDR4_INDEX}] -boundary_type upper [get_bd_intf_pins DDR4/ddr4_${DDR4_INDEX}]
         connect_bd_intf_net [get_bd_intf_ports ddr4_clk_${DDR4_INDEX}] -boundary_type upper [get_bd_intf_pins DDR4/ddr4_clk_${DDR4_INDEX}]
@@ -87,6 +97,9 @@ if {$USE_ARM} {
 ## Address Mapping
 source AddressMapping.tcl
 
-# set_property target_language VHDL [current_project]
-# validate_bd_design
-# save_bd_design
+set_property target_language VHDL [current_project]
+validate_bd_design
+save_bd_design
+make_wrapper -files [get_files FPGA_Shell/FPGA_Shell.bd] -top
+add_files -norecurse FPGA_Shell/hdl/FPGA_Shell_wrapper.vhd
+set_property top FPGA_Shell_wrapper [current_fileset]
