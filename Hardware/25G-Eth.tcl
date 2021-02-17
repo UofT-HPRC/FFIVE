@@ -28,6 +28,7 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 QSFP/QSFP_$QSFP_I
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_INDEX/packet_mode_fifo
 
 # configure the cores
+# set_property CONFIG.ETHERNET_BOARD_INTERFACE $QSFP_MODE [get_bd_cells /QSFP/QSFP_$QSFP_INDEX/eth]
 set_property CONFIG.USE_BOARD_FLOW true [get_bd_cells /QSFP/QSFP_$QSFP_INDEX/eth]
 if {$QSFP_SPEED == "10G"} {
 	set_property -dict [list CONFIG.LINE_RATE {10} CONFIG.INCLUDE_AXI4_INTERFACE {1} CONFIG.ENABLE_TX_FLOW_CONTROL_LOGIC {0} CONFIG.ENABLE_RX_FLOW_CONTROL_LOGIC {0}] [get_bd_cells QSFP/QSFP_${QSFP_INDEX}/eth]
@@ -76,7 +77,7 @@ connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/tx_clk_out_0] [get_bd_pins
 connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/tx_clk_out_0] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/network_tx_cdc/m_axis_aclk]
 connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/pm_tick_0] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/w1v0/dout]
 connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/dclk] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/w1v0/dout]
-connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/s_axi_aresetn_0] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/network_reset_hub/peripheral_reset]
+connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/s_axi_aresetn_0] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/network_reset_hub/peripheral_aresetn]
 connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/axi_interconnect_0/ACLK] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/tx_clk_out_0]
 connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/axi_interconnect_0/S00_ACLK] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/tx_clk_out_0]
 connect_bd_net [get_bd_pins QSFP/QSFP_$QSFP_INDEX/axi_interconnect_0/M00_ACLK] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/eth/tx_clk_out_0]

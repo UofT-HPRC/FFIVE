@@ -22,6 +22,7 @@ create_bd_pin -dir I QSFP/config_reset
 for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 	set QSFP_INTERFACE [lindex $QSFP_INTERFACES $QSFP_INDEX]
 	set QSFP_SPEED [lindex $QSFP_SPEEDS $QSFP_INDEX]
+	set QSFP_MODE [lindex $QSFP_MODES $QSFP_INDEX]
 	if {$QSFP_SPEED == "10G" || $QSFP_SPEED == "25G"} {
 		source 25G-Eth.tcl
 	} elseif {$QSFP_SPEED == "50G" || $QSFP_SPEED == "40G"} {

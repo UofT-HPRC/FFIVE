@@ -71,4 +71,5 @@ connect_bd_net [get_bd_pins ARM/vnf_reset] [get_bd_pins ARM/VNF_clk_reset_core/i
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/M04_ARESETN] [get_bd_pins ARM/VNF_clk_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins ARM/VNF_clk_reset_core/slowest_sync_clk] [get_bd_pins ARM/ARM/pl_clk2]
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/M04_ACLK] [get_bd_pins ARM/ARM/pl_clk2]
+connect_bd_net [get_bd_pins ARM/vnf_clk] [get_bd_pins ARM/ARM/pl_clk2]
 

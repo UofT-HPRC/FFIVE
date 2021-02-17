@@ -123,6 +123,7 @@ else:
 BOARD = None
 FPGA = None
 HS_ETH = set()
+HS_ETH_MODES = {}
 HS_ETH_FQS = {}         # Dict of lists, allowed freqs per interface
 HS_ETH_FQ = {}          # Dict, picked freq per interface
 HS_ETH_100G_USED = False
@@ -147,20 +148,31 @@ for component in components:
                     HS_ETH.add(component.get("name"))
                     if component.get("name") not in HS_ETH_FQS:
                         HS_ETH_FQS[component.get("name")] = set()
+                        HS_ETH_MODES[component.get("name")] = {}
                     HS_ETH_FQS[component.get("name")].add("100G")
+                    if "100G" not in HS_ETH_MODES[component.get("name")]:
+                        HS_ETH_MODES[component.get("name")]["100G"] = mode.find("interfaces")[0].get("name")
                     HS_ETH_100G_USED = True
                 elif ip.get("name") == "xxv_ethernet":
                     HS_ETH.add(component.get("name"))
                     if component.get("name") not in HS_ETH_FQS:
                         HS_ETH_FQS[component.get("name")] = set()
+                        HS_ETH_MODES[component.get("name")] = {}
                     HS_ETH_FQS[component.get("name")].add("10G")
                     HS_ETH_FQS[component.get("name")].add("25G")
+                    if "10G" not in HS_ETH_MODES[component.get("name")]:
+                        HS_ETH_MODES[component.get("name")]["10G"] = mode.find("interfaces")[0].get("name")
+                        HS_ETH_MODES[component.get("name")]["25G"] = mode.find("interfaces")[0].get("name")
                 elif ip.get("name") == "l_ethernet":
                     HS_ETH.add(component.get("name"))
                     if component.get("name") not in HS_ETH_FQS:
                         HS_ETH_FQS[component.get("name")] = set()
+                        HS_ETH_MODES[component.get("name")] = {}
                     HS_ETH_FQS[component.get("name")].add("40G")
                     HS_ETH_FQS[component.get("name")].add("50G")
+                    if "40G" not in HS_ETH_MODES[component.get("name")]:
+                        HS_ETH_MODES[component.get("name")]["40G"] = mode.find("interfaces")[0].get("name")
+                        HS_ETH_MODES[component.get("name")]["50G"] = mode.find("interfaces")[0].get("name")
     elif component.get("sub_type") == "ddr":
         parameters = component.find("parameters")
         for parameter in parameters:
@@ -266,6 +278,10 @@ with open("Parameters.tcl", "w") as script:
     for iface in HS_ETH:
         print(iface, end=" ", file=script)
     print("}", file=script)
+    print("set QSFP_MODES {", end="", file=script)
+    for iface in HS_ETH:
+        print(HS_ETH_MODES[iface][HS_ETH_FQ[iface]], end=" ", file=script)
+    print("}", file=script)
     print("set QSFP_SPEEDS {", end="", file=script)
     for iface in HS_ETH:
         print(HS_ETH_FQ[iface], end=" ", file=script)
@@ -333,8 +349,8 @@ try:
     subprocess.run("cd IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-RAM -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4S-Replicator -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
-    subprocess.run("cd IPs/VXLAN-bridge && vivado_hls VXLAN_bridge.tcl", shell=True, check=True)
-    subprocess.run("cd IPs/AXI-GPIO && vivado_hls AXI_GPIO.tcl", shell=True, check=True)
+    subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vivado_hls VXLAN_bridge.tcl", shell=True, check=True)
+    subprocess.run("cd IPs/AXI-GPIO && rm gpio/ -rf && vivado_hls AXI_GPIO.tcl", shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))

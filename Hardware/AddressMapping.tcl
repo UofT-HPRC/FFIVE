@@ -7,8 +7,10 @@ if {$QSFP_SPEED == "100G"} {
     assign_bd_address [get_bd_addr_segs {QSFP/QSFP_0/cmac/s_axi/Reg }]
     set_property name SEG_cmac_Reg0 [get_bd_addr_segs {ARM/ARM/Data/SEG_cmac_Reg}]
     set_property offset 0x00A0100000 [get_bd_addr_segs {ARM/ARM/Data/SEG_cmac_Reg0}]
-} elseif {$QSFP_SPEED == "50G" || QSFP_SPEED == "40G"} {
-} elseif {$QSFP_SPEED == "10G" || QSFP_SPEED == "25G"} {
+} else {
+    assign_bd_address [get_bd_addr_segs {QSFP/QSFP_0/eth/s_axi_0/Reg }]
+    set_property name SEG_eth_Reg0 [get_bd_addr_segs {ARM/ARM/Data/SEG_eth_Reg}]
+    set_property offset 0x00A0100000 [get_bd_addr_segs {ARM/ARM/Data/SEG_eth_Reg0}]
 }
 # Network UDP
 assign_bd_address [get_bd_addr_segs {QSFP/QSFP_0/GULF_Stream/s_axictl/reg0 }]
@@ -27,8 +29,10 @@ for {set QSFP_INDEX 1} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
         assign_bd_address [get_bd_addr_segs QSFP/QSFP_${QSFP_INDEX}/cmac/s_axi/Reg]
         set_property name SEG_cmac_Reg${QSFP_INDEX} [get_bd_addr_segs {ARM/ARM/Data/SEG_cmac_Reg}]
         set_property offset 0x00A01${QSFP_INDEX}0000 [get_bd_addr_segs ARM/ARM/Data/SEG_cmac_Reg${QSFP_INDEX}]
-    } elseif {$QSFP_SPEED == "50G" || QSFP_SPEED == "40G"} {
-    } elseif {$QSFP_SPEED == "10G" || QSFP_SPEED == "25G"} {
+    } else {
+        assign_bd_address [get_bd_addr_segs QSFP/QSFP_${QSFP_INDEX}/eth/s_axi_0/Reg]
+        set_property name SEG_eth_Reg${QSFP_INDEX} [get_bd_addr_segs {ARM/ARM/Data/SEG_eth_Reg}]
+        set_property offset 0x00A01${QSFP_INDEX}0000 [get_bd_addr_segs ARM/ARM/Data/SEG_eth_Reg${QSFP_INDEX}]
     }
     # Network UDP
     assign_bd_address [get_bd_addr_segs QSFP/QSFP_${QSFP_INDEX}/GULF_Stream/s_axictl/reg0]

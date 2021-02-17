@@ -13,11 +13,13 @@ source QSFP.tcl
 create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 init
 connect_bd_intf_net [get_bd_intf_ports init] -boundary_type upper [get_bd_intf_pins QSFP/init]
 for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
+	set QSFP_SPEED [lindex $QSFP_SPEEDS $QSFP_INDEX]
     if {$QSFP_SPEED == "100G"} {
         set CLOCK [get_property CONFIG.GT_REF_CLK_FREQ [get_bd_cells QSFP/QSFP_${QSFP_INDEX}/cmac]]
         set CLOCK [expr int(1000000 * $CLOCK)]
-    } elseif {$QSFP_SPEED == "50G" || QSFP_SPEED == "40G"} {
-    } elseif {$QSFP_SPEED == "10G" || QSFP_SPEED == "25G"} {
+    } else {
+        set CLOCK [get_property CONFIG.GT_REF_CLK_FREQ [get_bd_cells QSFP/QSFP_${QSFP_INDEX}/eth]]
+        set CLOCK [expr int(1000000 * $CLOCK)]
     }
     set QSFP_INTERFACE [lindex $QSFP_INTERFACES $QSFP_INDEX]
     create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gt_rtl:1.0 ${QSFP_INTERFACE}
@@ -34,7 +36,8 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 if {$DDR4_COUNT} {
 	source DDR4.tcl
     for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
-        set CLOCK [get_property CONFIG.C0.DDR4_InputClockPeriod [get_bd_cells DDR4/ddr4_sdram]]
+	    set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
+        set CLOCK [get_property CONFIG.C0.DDR4_InputClockPeriod [get_bd_cells DDR4/$DDR4_INTERFACE]]
         set CLOCK [expr int(1000000000000 / $CLOCK)]
 	    create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddr4_rtl:1.0 ddr4_${DDR4_INDEX}
 	    create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 ddr4_clk_${DDR4_INDEX}

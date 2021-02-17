@@ -31,6 +31,7 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 QSFP/QSFP_$QSFP_I
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_INDEX/packet_mode_fifo
 
 # configure the cores
+# set_property CONFIG.ETHERNET_BOARD_INTERFACE $QSFP_MODE [get_bd_cells /QSFP/QSFP_$QSFP_INDEX/cmac]
 set_property CONFIG.USE_BOARD_FLOW true [get_bd_cells /QSFP/QSFP_$QSFP_INDEX/cmac]
 set_property -dict [list CONFIG.CMAC_CAUI4_MODE {1} CONFIG.NUM_LANES {4} CONFIG.GT_DRP_CLK {200.00} CONFIG.ENABLE_AXI_INTERFACE {1} CONFIG.RX_CHECK_PREAMBLE {1} CONFIG.RX_CHECK_SFD {1} CONFIG.TX_FLOW_CONTROL {0} CONFIG.RX_FLOW_CONTROL {0}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/cmac]
 set_property -dict [list CONFIG.HAS_AXIL {true}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/GULF_Stream]
