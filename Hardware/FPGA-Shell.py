@@ -313,8 +313,8 @@ with open("IPs/VXLAN-bridge/VXLAN_bridge.tcl", "w") as script:
     print("""open_project vxlan_bridge
 set_top vxlan_bridge
 add_files vxlan_bridge.cpp
-open_solution \"solution1\"
-set_part {""" + FPGA + """} -tool vivado
+open_solution \"solution1\" -flow_target vivado
+set_part {""" + FPGA + """}
 create_clock -period 3 -name default
 config_compile
 config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
@@ -327,8 +327,8 @@ with open("IPs/AXI-GPIO/AXI_GPIO.tcl", "w") as script:
     print("""open_project gpio
 set_top gpio
 add_files AXI_GPIO.cpp
-open_solution \"solution1\"
-set_part {""" + FPGA + """} -tool vivado
+open_solution \"solution1\" -flow_target vivado
+set_part {""" + FPGA + """}
 create_clock -period 3 -name default
 config_compile
 config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
@@ -350,7 +350,7 @@ try:
     subprocess.run("cd IPs/IPLibrary && make AXI4-RAM -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-GPIO -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4S-Replicator -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
-    subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vivado_hls VXLAN_bridge.tcl", shell=True, check=True)
+    subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vitis_hls VXLAN_bridge.tcl", shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))
