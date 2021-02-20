@@ -348,9 +348,9 @@ try:
     subprocess.run("cd IPs/lbus_axis_converter && make gen_ip -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-RAM -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd IPs/IPLibrary && make AXI4-GPIO -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4S-Replicator -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vivado_hls VXLAN_bridge.tcl", shell=True, check=True)
-    subprocess.run("cd IPs/AXI-GPIO && rm gpio/ -rf && vivado_hls AXI_GPIO.tcl", shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))
