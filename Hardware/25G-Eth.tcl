@@ -17,7 +17,7 @@ create_bd_pin -dir I QSFP/QSFP_$QSFP_INDEX/network_tx_clk
 # add cores
 create_bd_cell -type ip -vlnv clarkshen.com:user:GULF_Stream:1.0 QSFP/QSFP_$QSFP_INDEX/GULF_Stream
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 QSFP/QSFP_$QSFP_INDEX/axi_interconnect_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:xxv_ethernet:2.5 QSFP/QSFP_$QSFP_INDEX/eth
+create_bd_cell -type ip -vlnv xilinx.com:ip:xxv_ethernet:3.3 QSFP/QSFP_$QSFP_INDEX/eth
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_INDEX/network_rx_cdc
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_INDEX/network_tx_cdc
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_dwidth_converter:1.1 QSFP/QSFP_$QSFP_INDEX/axi_width_converter_tx

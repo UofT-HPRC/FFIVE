@@ -41,17 +41,11 @@ void vxlan_bridge
 #pragma HLS INTERFACE ap_ctrl_none port=return
 #pragma HLS DATAFLOW
 
-#pragma HLS resource core=AXI4Stream variable = network_in
-#pragma HLS DATA_PACK variable=network_in
+#pragma HLS INTERFACE axis port=network_in
+#pragma HLS INTERFACE axis port=network_out
+#pragma HLS INTERFACE axis port=user_in
+#pragma HLS INTERFACE axis port=user_out
 
-#pragma HLS resource core=AXI4Stream variable = network_out
-#pragma HLS DATA_PACK variable=network_out
-
-#pragma HLS resource core=AXI4Stream variable = user_in
-#pragma HLS DATA_PACK variable=user_in
-
-#pragma HLS resource core=AXI4Stream variable = user_out
-#pragma HLS DATA_PACK variable=user_out
 	static ap_uint<4> net_input_stage = PACKET_START;
 	static ap_uint<4> usr_input_stage = PACKET_START;
 	static dataword net_input_overflow;

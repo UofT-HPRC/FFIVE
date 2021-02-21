@@ -2,7 +2,7 @@
 create_bd_cell -type hier ARM
 
 # Core
-create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 ARM/ARM
+create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 ARM/ARM
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ARM/ARM_interconnect
 create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 ARM/ARM_clk_reset_core
 create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 ARM/VNF_clk_reset_core

@@ -19,7 +19,7 @@ create_bd_pin -dir I QSFP/QSFP_$QSFP_INDEX/network_tx_clk
 create_bd_cell -type ip -vlnv clarkshen.com:user:lbus_axis_converter:1.0 QSFP/QSFP_$QSFP_INDEX/lbus_axis_converter
 create_bd_cell -type ip -vlnv clarkshen.com:user:GULF_Stream:1.0 QSFP/QSFP_$QSFP_INDEX/GULF_Stream
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 QSFP/QSFP_$QSFP_INDEX/axi_interconnect_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:cmac_usplus:2.5 QSFP/QSFP_$QSFP_INDEX/cmac
+create_bd_cell -type ip -vlnv xilinx.com:ip:cmac_usplus:3.1 QSFP/QSFP_$QSFP_INDEX/cmac
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_INDEX/network_rx_cdc
 create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_INDEX/network_tx_cdc
 create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 QSFP/QSFP_$QSFP_INDEX/w1v0
@@ -33,7 +33,7 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_data_fifo:2.0 QSFP/QSFP_$QSFP_I
 # configure the cores
 # set_property CONFIG.ETHERNET_BOARD_INTERFACE $QSFP_MODE [get_bd_cells /QSFP/QSFP_$QSFP_INDEX/cmac]
 set_property CONFIG.USE_BOARD_FLOW true [get_bd_cells /QSFP/QSFP_$QSFP_INDEX/cmac]
-set_property -dict [list CONFIG.CMAC_CAUI4_MODE {1} CONFIG.NUM_LANES {4} CONFIG.GT_DRP_CLK {200.00} CONFIG.ENABLE_AXI_INTERFACE {1} CONFIG.RX_CHECK_PREAMBLE {1} CONFIG.RX_CHECK_SFD {1} CONFIG.TX_FLOW_CONTROL {0} CONFIG.RX_FLOW_CONTROL {0}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/cmac]
+set_property -dict [list CONFIG.CMAC_CAUI4_MODE {1} CONFIG.NUM_LANES {4x25} CONFIG.GT_DRP_CLK {200.00} CONFIG.ENABLE_AXI_INTERFACE {1} CONFIG.RX_CHECK_PREAMBLE {1} CONFIG.RX_CHECK_SFD {1} CONFIG.TX_FLOW_CONTROL {0} CONFIG.RX_FLOW_CONTROL {0}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/cmac]
 set_property -dict [list CONFIG.HAS_AXIL {true}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/GULF_Stream]
 set_property -dict [list CONFIG.NUM_MI {2} CONFIG.M00_HAS_REGSLICE {1} CONFIG.M01_HAS_REGSLICE {1} CONFIG.S00_HAS_REGSLICE {1}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/axi_interconnect_0]
 set_property -dict [list CONFIG.FIFO_DEPTH {1024} CONFIG.FIFO_MODE {1} CONFIG.IS_ACLK_ASYNC {1} CONFIG.SYNCHRONIZATION_STAGES {3}] [get_bd_cells QSFP/QSFP_$QSFP_INDEX/network_rx_cdc]
