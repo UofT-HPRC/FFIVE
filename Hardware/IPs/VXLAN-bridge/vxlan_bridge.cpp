@@ -1,6 +1,7 @@
 #include "hls_stream.h"
 #include "ap_int.h"
 #include "ap_utils.h"
+#include "ap_axi_sdata.h"
 
 
 //HLS Pre-processing
@@ -8,29 +9,13 @@
 #define PACKET_MIDDLE 1
 #define PACKET_END 2
 #define DROP_PACKET 3
-struct dataword
-{
-	ap_uint<512> data;
-	ap_uint<64> keep;
-	ap_uint<1> last;
-};
-
-struct dataword_ext
-{
-	ap_uint<512> data;
-	ap_uint<64> keep;
-	ap_uint<1> last;
-	ap_uint<16> id;
-	ap_uint<16> dest;
-	ap_uint<32> user;
-};
 
 void vxlan_bridge
 (
-	hls::stream<dataword> &network_in,
-	hls::stream<dataword_ext> &network_out,
-	hls::stream<dataword> &user_in,
-	hls::stream<dataword> &user_out,
+    hls::stream<hls::axis<ap_uint<512>, 0, 0, 0>> &network_in,
+	hls::stream<hls::axis<ap_uint<512>, 32, 16, 16>> &network_out,
+	hls::stream<hls::axis<ap_uint<512>, 0, 0, 0>> &user_in,
+	hls::stream<hls::axis<ap_uint<512>, 0, 0, 0>> &user_out,
 	ap_uint<24> vni,
 	ap_uint<32> ip_addr,
 	ap_uint<16> local_port,
@@ -48,12 +33,12 @@ void vxlan_bridge
 
 	static ap_uint<4> net_input_stage = PACKET_START;
 	static ap_uint<4> usr_input_stage = PACKET_START;
-	static dataword net_input_overflow;
-	static dataword usr_input_overflow;
-	dataword net_input_buf;
-	dataword usr_input_buf;
-	dataword_ext net_output_buf;
-	dataword usr_output_buf;
+	static hls::axis<ap_uint<512>, 0, 0, 0> net_input_overflow;
+	static hls::axis<ap_uint<512>, 0, 0, 0> usr_input_overflow;
+	hls::axis<ap_uint<512>, 0, 0, 0> net_input_buf;
+	hls::axis<ap_uint<512>, 0, 0, 0> usr_input_buf;
+	hls::axis<ap_uint<512>, 32, 16, 16> net_output_buf;
+	hls::axis<ap_uint<512>, 0, 0, 0> usr_output_buf;
 	net_output_buf.id = local_port;
 	net_output_buf.dest = remote_port;
 	net_output_buf.user = ip_addr;
