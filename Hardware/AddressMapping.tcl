@@ -16,8 +16,7 @@ if {$QSFP_SPEED == "100G"} {
 assign_bd_address [get_bd_addr_segs {QSFP/QSFP_0/GULF_Stream/s_axictl/reg0 }]
 set_property offset 0x00A0200000 [get_bd_addr_segs {ARM/ARM/Data/SEG_GULF_Stream_reg0}]
 # VXLAN
-assign_bd_address [get_bd_addr_segs {VXLAN/VXLAN_0/GPIO_net/S_AXI_BUS_A/Reg }]
-set_property name SEG_GPIO_net_Reg0 [get_bd_addr_segs {ARM/ARM/Data/SEG_GPIO_net_Reg}]
+assign_bd_address [get_bd_addr_segs {VXLAN/VXLAN_0/GPIO_net/s00_axi/reg0 }]
 set_property offset 0x00A0300000 [get_bd_addr_segs {ARM/ARM/Data/SEG_GPIO_net_Reg0}]
 
 
@@ -36,11 +35,11 @@ for {set QSFP_INDEX 1} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
     }
     # Network UDP
     assign_bd_address [get_bd_addr_segs QSFP/QSFP_${QSFP_INDEX}/GULF_Stream/s_axictl/reg0]
-    set_property name SEG_GULF_Stream_reg${QSFP_INDEX} [get_bd_addr_segs ARM/ARM/Data/SEG_GULF_Stream_reg0${QSFP_INDEX}]
-    set_property offset 0x00A020${QSFP_INDEX}000 [get_bd_addr_segs ARM/ARM/Data/SEG_GULF_Stream_reg${QSFP_INDEX}]
+    set_property name SEG_GULF_Stream_reg${QSFP_INDEX} [get_bd_addr_segs ARM/ARM/Data/SEG_GULF_Stream_reg0_${QSFP_INDEX}]
+    set_property offset 0x00A02${QSFP_INDEX}0000 [get_bd_addr_segs ARM/ARM/Data/SEG_GULF_Stream_reg${QSFP_INDEX}]
     # VXLAN
-    assign_bd_address [get_bd_addr_segs VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/S_AXI_BUS_A/Reg]
-    set_property name SEG_GPIO_net_Reg${QSFP_INDEX} [get_bd_addr_segs {ARM/ARM/Data/SEG_GPIO_net_Reg}]
+    assign_bd_address [get_bd_addr_segs VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/s00_axi/reg0]
+    set_property name SEG_GPIO_net_Reg${QSFP_INDEX} [get_bd_addr_segs ARM/ARM/Data/SEG_GPIO_net_reg0_${QSFP_INDEX}]
     set_property offset 0x00A03${QSFP_INDEX}0000 [get_bd_addr_segs ARM/ARM/Data/SEG_GPIO_net_Reg${QSFP_INDEX}]
 }
 
