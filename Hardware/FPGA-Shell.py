@@ -124,6 +124,7 @@ BOARD = None
 FPGA = None
 HS_ETH = set()
 HS_ETH_MODES = {}
+HS_ETH_CLOCKS = {}
 HS_ETH_FQS = {}         # Dict of lists, allowed freqs per interface
 HS_ETH_FQ = {}          # Dict, picked freq per interface
 HS_ETH_100G_USED = False
@@ -149,30 +150,38 @@ for component in components:
                     if component.get("name") not in HS_ETH_FQS:
                         HS_ETH_FQS[component.get("name")] = set()
                         HS_ETH_MODES[component.get("name")] = {}
+                        HS_ETH_CLOCKS[component.get("name")] = {}
                     HS_ETH_FQS[component.get("name")].add("100G")
                     if "100G" not in HS_ETH_MODES[component.get("name")]:
                         HS_ETH_MODES[component.get("name")]["100G"] = mode.find("interfaces")[0].get("name")
+                        HS_ETH_CLOCKS[component.get("name")]["100G"] = mode.find("interfaces")[1].get("name")
                     HS_ETH_100G_USED = True
                 elif ip.get("name") == "xxv_ethernet":
                     HS_ETH.add(component.get("name"))
                     if component.get("name") not in HS_ETH_FQS:
                         HS_ETH_FQS[component.get("name")] = set()
                         HS_ETH_MODES[component.get("name")] = {}
+                        HS_ETH_CLOCKS[component.get("name")] = {}
                     HS_ETH_FQS[component.get("name")].add("10G")
                     HS_ETH_FQS[component.get("name")].add("25G")
                     if "10G" not in HS_ETH_MODES[component.get("name")]:
                         HS_ETH_MODES[component.get("name")]["10G"] = mode.find("interfaces")[0].get("name")
                         HS_ETH_MODES[component.get("name")]["25G"] = mode.find("interfaces")[0].get("name")
+                        HS_ETH_CLOCKS[component.get("name")]["10G"] = mode.find("interfaces")[1].get("name")
+                        HS_ETH_CLOCKS[component.get("name")]["25G"] = mode.find("interfaces")[1].get("name")
                 elif ip.get("name") == "l_ethernet":
                     HS_ETH.add(component.get("name"))
                     if component.get("name") not in HS_ETH_FQS:
                         HS_ETH_FQS[component.get("name")] = set()
                         HS_ETH_MODES[component.get("name")] = {}
+                        HS_ETH_CLOCKS[component.get("name")] = {}
                     HS_ETH_FQS[component.get("name")].add("40G")
                     HS_ETH_FQS[component.get("name")].add("50G")
                     if "40G" not in HS_ETH_MODES[component.get("name")]:
                         HS_ETH_MODES[component.get("name")]["40G"] = mode.find("interfaces")[0].get("name")
                         HS_ETH_MODES[component.get("name")]["50G"] = mode.find("interfaces")[0].get("name")
+                        HS_ETH_CLOCKS[component.get("name")]["40G"] = mode.find("interfaces")[1].get("name")
+                        HS_ETH_CLOCKS[component.get("name")]["50G"] = mode.find("interfaces")[1].get("name")
     elif component.get("sub_type") == "ddr":
         parameters = component.find("parameters")
         for parameter in parameters:
@@ -282,6 +291,10 @@ with open("Parameters.tcl", "w") as script:
     for iface in HS_ETH:
         print(HS_ETH_MODES[iface][HS_ETH_FQ[iface]], end=" ", file=script)
     print("}", file=script)
+    print("set QSFP_CLOCKS {", end="", file=script)
+    for iface in HS_ETH:
+        print(HS_ETH_CLOCKS[iface][HS_ETH_FQ[iface]], end=" ", file=script)
+    print("}", file=script)
     print("set QSFP_SPEEDS {", end="", file=script)
     for iface in HS_ETH:
         print(HS_ETH_FQ[iface], end=" ", file=script)
@@ -323,19 +336,6 @@ csynth_design
 export_design -rtl verilog -format ip_catalog
 exit""", file=script)
 
-with open("IPs/AXI-GPIO/AXI_GPIO.tcl", "w") as script:
-    print("""open_project gpio
-set_top gpio
-add_files AXI_GPIO.cpp
-open_solution \"solution1\" -flow_target vivado
-set_part {""" + FPGA + """}
-create_clock -period 3 -name default
-config_compile
-config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
-config_rtl -encoding onehot -reset all -reset_level low
-csynth_design
-export_design -rtl verilog -format ip_catalog
-exit""", file=script)
 try:
     subprocess.run("git submodule init", shell=True, check=True)
     subprocess.run("git submodule update", shell=True, check=True)
