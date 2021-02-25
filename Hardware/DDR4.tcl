@@ -29,7 +29,8 @@ set_property -dict [list CONFIG.NUM_SI {2} CONFIG.NUM_MI $MASTERS CONFIG.ENABLE_
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells DDR4/polarity_flipper]
 for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
 	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
-	set_property -dict [list CONFIG.C0_DDR4_BOARD_INTERFACE $DDR4_INTERFACE] [get_bd_cells DDR4/$DDR4_INTERFACE]
+	set DDR4_CLOCK [lindex $DDR4_CLOCKS $DDR4_INDEX]
+	set_property -dict [list CONFIG.C0_CLOCK_BOARD_INTERFACE $DDR4_CLOCK CONFIG.C0_DDR4_BOARD_INTERFACE $DDR4_INTERFACE] [get_bd_cells DDR4/$DDR4_INTERFACE]
 }
 
 # Connect interfaces

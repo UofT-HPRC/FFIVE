@@ -3,6 +3,7 @@
 import re
 import os
 import glob
+import shutil
 import xml.etree.ElementTree as et
 import subprocess
 import multiprocessing
@@ -80,6 +81,23 @@ def read_number(string, lower_limit=None, upper_limit=None):
             pass
 
 ###############################################################################################
+########################################### Cleanup ###########################################
+###############################################################################################
+if os.path.exists("./FPGA_Shell.xpr") == True:
+    accept = read_yesno("Found previous shell project, delete")
+    if not accept:
+        exit()
+    try:
+        os.remove("./FPGA_Shell.xpr")
+        shutil.rmtree("./FPGA_Shell/")
+        for folder in glob.glob("./FPGA_Shell.*/"):
+            shutil.rmtree(folder)
+    except OSError as e:
+        print(e)
+        print_error("Cannot remove the previously created shell. Delete it yourself and run again.")
+        exit(8)
+
+###############################################################################################
 ##################################### Vivado Installation #####################################
 ###############################################################################################
 while True:
@@ -130,6 +148,7 @@ HS_ETH_FQ = {}          # Dict, picked freq per interface
 HS_ETH_100G_USED = False
 VXLAN_100G = []
 DDR4 = []
+DDR4_CLOCKS = []
 DDR4_SIZES = []
 USE_ARM = False
 
@@ -184,9 +203,11 @@ for component in components:
                         HS_ETH_CLOCKS[component.get("name")]["50G"] = mode.find("interfaces")[1].get("name")
     elif component.get("sub_type") == "ddr":
         parameters = component.find("parameters")
+        modes = component.find("component_modes")
         for parameter in parameters:
             if parameter.get("name") == "ddr_type" and parameter.get("value") == "ddr4":
-                DDR4.append(component.get("name"))
+                DDR4.append(modes[0].find("interfaces")[0].get("name"))
+                DDR4_CLOCKS.append(modes[0].find("interfaces")[1].get("name"))
             elif parameter.get("name") == "size":
                 DDR4_SIZES.append(parameter.get("value"))
     # elif component.get("sub_type") == "pci":
@@ -312,6 +333,10 @@ with open("Parameters.tcl", "w") as script:
     for iface in DDR4:
         print(iface, end=" ", file=script)
     print("}", file=script)
+    print("set DDR4_CLOCKS {", end="", file=script)
+    for iface in DDR4_CLOCKS:
+        print(iface, end=" ", file=script)
+    print("}", file=script)
     if USE_ARM:
         print("set USE_ARM true", file=script)
     else:
@@ -359,8 +384,8 @@ except subprocess.SubprocessError as e:
 ###############################################################################################
 ######################################### Build Shell #########################################
 ###############################################################################################
-# try:
-#     subprocess.run("vivado -nolog -nojournal -mode batch -source FPGA-Shell.tcl", shell=True, check=True)
-# except subprocess.SubprocessError as e:
-#     print_error("Could not build shell: " + str(e))
-#     exit(7)
+try:
+    subprocess.run("vivado -nolog -nojournal -mode batch -source FPGA-Shell.tcl", shell=True, check=True)
+except subprocess.SubprocessError as e:
+    print_error("Could not build shell: " + str(e))
+    exit(7)
