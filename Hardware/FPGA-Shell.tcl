@@ -106,3 +106,5 @@ save_bd_design
 make_wrapper -files [get_files FPGA_Shell/FPGA_Shell.bd] -top
 add_files -norecurse FPGA_Shell/hdl/FPGA_Shell_wrapper.vhd
 set_property top FPGA_Shell_wrapper [current_fileset]
+set_property strategy Flow_PerfOptimized_high [get_runs synth_1]
+set_property strategy Performance_ExtraTimingOpt [get_runs impl_1]
