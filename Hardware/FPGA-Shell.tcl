@@ -95,10 +95,56 @@ if {$USE_ARM} {
             connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx] [get_bd_intf_pins VNF/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx]
         }
     }
-}
 
-## Address Mapping
-source AddressMapping.tcl
+    ## Address Mapping
+    source ARM_AddressMapping.tcl
+} else {
+    source PCIe.tcl
+
+    create_bd_intf_port -mode Master -vlnv xilinx.com:interface:pcie_7x_mgt_rtl:1.0 $PCIe
+    create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 pcie_clk
+    create_bd_port -dir I pcie_reset
+
+    connect_bd_intf_net [get_bd_intf_pins ID_RAM/s00_axi] -boundary_type upper [get_bd_intf_pins PCIe/ID_access]
+    connect_bd_net [get_bd_pins ID_RAM/s00_axi_aclk] [get_bd_pins PCIe/config_clk]
+    connect_bd_net [get_bd_pins ID_RAM/s00_axi_aresetn] [get_bd_pins PCIe/config_reset]
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins PCIe/VXLAN_ctrl] [get_bd_intf_pins VXLAN/VXLAN_ctrl]
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins PCIe/QSFP_ctrl] [get_bd_intf_pins QSFP/network_config]
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins PCIe/DDR4_access] [get_bd_intf_pins DDR4/cpu_mem]
+    connect_bd_net [get_bd_pins VXLAN/VXLAN_ctrl_clk] [get_bd_pins PCIe/config_clk] -boundary_type upper
+    connect_bd_net [get_bd_pins PCIe/config_reset] [get_bd_pins VXLAN/VXLAN_ctrl_reset] -boundary_type upper
+    connect_bd_net [get_bd_pins QSFP/config_clk] [get_bd_pins PCIe/config_clk] -boundary_type upper
+    connect_bd_net [get_bd_pins QSFP/config_reset] [get_bd_pins PCIe/config_reset] -boundary_type upper
+    connect_bd_net [get_bd_pins QSFP/general_reset] [get_bd_pins PCIe/general_reset] -boundary_type upper
+    connect_bd_net [get_bd_pins DDR4/global_reset] [get_bd_pins PCIe/general_reset] -boundary_type upper
+    connect_bd_net [get_bd_pins DDR4/cpu_mem_clk] [get_bd_pins PCIe/config_clk] -boundary_type upper
+    connect_bd_net [get_bd_pins DDR4/cpu_mem_reset] [get_bd_pins PCIe/config_reset] -boundary_type upper
+    connect_bd_net [get_bd_pins VNF/config_clk] [get_bd_pins PCIe/config_clk] -boundary_type upper
+    connect_bd_net [get_bd_pins VNF/config_reset] [get_bd_pins PCIe/config_reset] -boundary_type upper
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VNF/fpga_mem] [get_bd_intf_pins DDR4/fpga_mem]
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins PCIe/VNF_ctrl] [get_bd_intf_pins VNF/VNF_config]
+    connect_bd_net [get_bd_pins PCIe/vnf_clk] [get_bd_pins DDR4/fpga_mem_clk] -boundary_type upper
+    connect_bd_net [get_bd_pins PCIe/vnf_clk] [get_bd_pins VNF/user_clk] -boundary_type upper
+    connect_bd_net [get_bd_pins PCIe/vnf_reset] [get_bd_pins VNF/user_reset] -boundary_type upper
+    connect_bd_net [get_bd_pins PCIe/vnf_reset] [get_bd_pins DDR4/fpga_mem_reset] -boundary_type upper
+    connect_bd_intf_net [get_bd_intf_ports $PCIe] -boundary_type upper [get_bd_intf_pins PCIe/$PCIe]
+    connect_bd_intf_net [get_bd_intf_ports pcie_clk] -boundary_type upper [get_bd_intf_pins PCIe/pcie_clk]
+    connect_bd_net [get_bd_ports pcie_reset] [get_bd_pins PCIe/pcie_reset]
+
+    for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
+        connect_bd_net [get_bd_pins VNF/VXLAN_${QSFP_INDEX}_clk] [get_bd_pins PCIe/network_clk] -boundary_type upper
+        connect_bd_net [get_bd_pins VNF/VXLAN_${QSFP_INDEX}_reset] [get_bd_pins PCIe/network_reset] -boundary_type upper
+        connect_bd_net [get_bd_pins PCIe/network_reset] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}_reset] -boundary_type upper
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}_clk] [get_bd_pins PCIe/network_clk] -boundary_type upper
+        connect_bd_net [get_bd_pins QSFP/QSFP_${QSFP_INDEX}_iface_reset] [get_bd_pins PCIe/network_reset] -boundary_type upper
+        connect_bd_net [get_bd_pins PCIe/network_clk] [get_bd_pins QSFP/QSFP_${QSFP_INDEX}_iface_clk] -boundary_type upper
+        set VXLAN_COUNT [lindex $VXLAN_INTERFACES $QSFP_INDEX]
+        for {set VXLAN_INDEX 0} {$VXLAN_INDEX < $VXLAN_COUNT} {incr VXLAN_INDEX} {
+            connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_rx] [get_bd_intf_pins VNF/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_rx]
+            connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx] [get_bd_intf_pins VNF/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx]
+        }
+    }
+}
 
 set_property target_language VHDL [current_project]
 validate_bd_design

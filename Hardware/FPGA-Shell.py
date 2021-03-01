@@ -84,7 +84,7 @@ def read_number(string, lower_limit=None, upper_limit=None):
 ########################################### Cleanup ###########################################
 ###############################################################################################
 if os.path.exists("./FPGA_Shell.xpr") == True:
-    accept = read_yesno("Found previous shell project, delete")
+    accept = read_yesno("Found previous shell project, delete", prefer_yes=True)
     if not accept:
         exit()
     try:
@@ -150,6 +150,9 @@ VXLAN_100G = []
 DDR4 = []
 DDR4_CLOCKS = []
 DDR4_SIZES = []
+PCIe = None
+PCIe_CLOCK = None
+PCIe_RESET = None
 USE_ARM = False
 
 root = et.parse(path + "/board.xml").getroot()
@@ -210,7 +213,23 @@ for component in components:
                 DDR4_CLOCKS.append(modes[0].find("interfaces")[1].get("name"))
             elif parameter.get("name") == "size":
                 DDR4_SIZES.append(parameter.get("value"))
-    # elif component.get("sub_type") == "pci":
+    else:
+        # PCIe doesn't have type PCIe type, gotta search
+        modes = component.find("component_modes")
+        if not modes:
+            continue
+        for mode in modes:
+            ips = mode.find("preferred_ips")
+            for ip in ips:
+                if ip.get("name") == "xdma":
+                    interfaces = mode.find("interfaces")
+                    if not interfaces:
+                        continue
+                    if "16" in interfaces[0].get("name"):
+                        PCIe = interfaces[0].get("name")
+                        PCIe_RESET = interfaces[1].get("name")
+                        PCIe_CLOCK = interfaces[2].get("name")
+
 BOARD += root.find("file_version").text
 HS_ETH = list(HS_ETH)
 if not FPGA:
@@ -337,11 +356,16 @@ with open("Parameters.tcl", "w") as script:
     for iface in DDR4_CLOCKS:
         print(iface, end=" ", file=script)
     print("}", file=script)
+    if PCIe:
+        print("set PCIe " + PCIe, file=script)
+        print("set PCIe_CLOCK " + PCIe_CLOCK, file=script)
+        print("set PCIe_RESET " + PCIe_RESET, file=script)
     if USE_ARM:
         print("set USE_ARM true", file=script)
     else:
         print("set USE_ARM false", file=script)
-    print("set CLOCK_DIVS {" + str(DIV1) + " " + str(DIV2) + "}", file=script)
+    print("set USER_CLOCK_DIVS {" + str(DIV1) + " " + str(DIV2) + "}", file=script)
+    print("set USER_CLOCK " + str(SPEED), file=script)
 print_success("Generated configuration.")
 
 ###############################################################################################
