@@ -1,8 +1,8 @@
 open_project vxlan_bridge
 set_top vxlan_bridge
 add_files vxlan_bridge.cpp
-open_solution "solution1"
-set_part {xcu250-figd2104-2L-e} -tool vivado
+open_solution "solution1" -flow_target vivado
+set_part {xcu250-figd2104-2L-e}
 create_clock -period 3 -name default
 config_compile
 config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
