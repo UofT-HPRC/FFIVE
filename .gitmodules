@@ -4,3 +4,6 @@
 [submodule "Hardware/IPs/IPLibrary"]
 	path = Hardware/IPs/IPLibrary
 	url = https://github.com/mewais/IPLibrary.git
+[submodule "Software/docopt.cpp"]
+	path = Software/docopt.cpp
+	url = https://github.com/docopt/docopt.cpp.git
