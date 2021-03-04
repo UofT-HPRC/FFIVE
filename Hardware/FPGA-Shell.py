@@ -83,15 +83,16 @@ def read_number(string, lower_limit=None, upper_limit=None):
 ###############################################################################################
 ########################################### Cleanup ###########################################
 ###############################################################################################
-if os.path.exists("./FPGA_Shell.xpr") == True:
+if os.path.exists("./FPGA_Shell/") == True:
     accept = read_yesno("Found previous shell project, delete", prefer_yes=True)
     if not accept:
         exit()
     try:
-        os.remove("./FPGA_Shell.xpr")
+        for file in glob.glob("*.log"):
+            os.remove(file)
+        for file in glob.glob("*.jou"):
+            os.remove(file)
         shutil.rmtree("./FPGA_Shell/")
-        for folder in glob.glob("./FPGA_Shell.*/"):
-            shutil.rmtree(folder)
     except OSError as e:
         print(e)
         print_error("Cannot remove the previously created shell. Delete it yourself and run again.")
@@ -394,8 +395,9 @@ except subprocess.SubprocessError as e:
     exit(5)
 print_info("Building prerequisites.")
 try:
-    subprocess.run("cd IPs/lbus_axis_converter && make gen_ip -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
-    subprocess.run("cd IPs/GULF-Stream && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+    subprocess.run("cd IPs/GULF-Stream/ip_repo/hls_ips/scripts && grep -rlIZPi 'set_part {.*} -tool vivado' | xargs -0r perl -pi -e 's/set_part {.*} -tool vivado/set_part {" + FPGA + "} -tool vivado/gi;'", shell=True, check=True)
+    subprocess.run("cd IPs/GULF-Stream/ip_repo && grep -rlIZPi '\-part .*' | xargs -0r perl -pi -e 's/-part xczu19eg-ffvc1760-2-i/-part " + FPGA + "/gi;'", shell=True, check=True)
+    subprocess.run("cd IPs/GULF-Stream && make clean_all && make GULF_Stream_IPCore -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-RAM -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-GPIO -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4S-Replicator -j" + str(multiprocessing.cpu_count()), shell=True, check=True)

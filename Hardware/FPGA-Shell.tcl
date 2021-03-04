@@ -1,9 +1,9 @@
 source Parameters.tcl
-create_project FPGA_Shell -part $FPGA
+create_project FPGA_Shell -part $FPGA $WORK_DIR/FPGA_Shell
 set_property board_part $BOARD [current_project]
 set_property ip_repo_paths {"IPs/GULF-Stream/" "IPs/lbus_axis_converter" "IPs/VXLAN-bridge" "IPs/IPLibrary"} [current_project]
 update_ip_catalog -rebuild
-create_bd_design FPGA_Shell -dir $WORK_DIR
+create_bd_design FPGA_Shell
 open_bd_design FPGA_Shell
 
 ## Network
@@ -144,13 +144,14 @@ if {$USE_ARM} {
             connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx] [get_bd_intf_pins VNF/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx]
         }
     }
+    source PCIe_AddressMapping.tcl
 }
 
 set_property target_language VHDL [current_project]
 validate_bd_design
 save_bd_design
-make_wrapper -files [get_files FPGA_Shell/FPGA_Shell.bd] -top
-add_files -norecurse FPGA_Shell/hdl/FPGA_Shell_wrapper.vhd
+make_wrapper -files [get_files $WORK_DIR/FPGA_Shell/FPGA_Shell.srcs/sources_1/bd/FPGA_Shell/FPGA_Shell.bd] -top
+add_files -norecurse $WORK_DIR/FPGA_Shell/FPGA_Shell.gen/sources_1/bd/FPGA_Shell/hdl/FPGA_Shell_wrapper.vhd
 set_property top FPGA_Shell_wrapper [current_fileset]
 set_property strategy Flow_PerfOptimized_high [get_runs synth_1]
 set_property strategy Performance_ExtraTimingOpt [get_runs impl_1]
