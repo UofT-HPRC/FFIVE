@@ -11,9 +11,6 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 	create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:gt_rtl:1.0 QSFP/$QSFP_INTERFACE
 }
 create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 QSFP/network_config
-if {$QSFP_100_USED} {
-	create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 QSFP/init
-}
 create_bd_pin -dir I QSFP/general_reset
 create_bd_pin -dir I QSFP/config_clk
 create_bd_pin -dir I QSFP/config_reset
@@ -24,6 +21,7 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 	set QSFP_SPEED [lindex $QSFP_SPEEDS $QSFP_INDEX]
 	set QSFP_CLOCK [lindex $QSFP_CLOCKS $QSFP_INDEX]
 	set QSFP_MODE [lindex $QSFP_MODES $QSFP_INDEX]
+	set QSFP_FREQ [lindex $QSFP_FREQS $QSFP_INDEX]
 	if {$QSFP_SPEED == "10G" || $QSFP_SPEED == "25G"} {
 		source 25G-Eth.tcl
 	} elseif {$QSFP_SPEED == "50G" || $QSFP_SPEED == "40G"} {
@@ -38,13 +36,10 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 
 # Create init
 if {$QSFP_100_USED} {
-	create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.1 QSFP/init_parser
-	set_property -dict [list CONFIG.C_BUF_TYPE {IBUFDS}] [get_bd_cells QSFP/init_parser]
-	connect_bd_intf_net [get_bd_intf_pins QSFP/init] [get_bd_intf_pins QSFP/init_parser/CLK_IN_D]
 	for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 		set QSFP_SPEED [lindex $QSFP_SPEEDS $QSFP_INDEX]
 		if {$QSFP_SPEED == "100G"} {
-			connect_bd_net [get_bd_pins QSFP/init_parser/IBUF_OUT] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/init]
+			connect_bd_net [get_bd_pins QSFP/config_clk] [get_bd_pins QSFP/QSFP_$QSFP_INDEX/init]
 		}
 	}
 }

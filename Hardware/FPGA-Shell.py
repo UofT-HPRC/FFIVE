@@ -146,6 +146,7 @@ HS_ETH_MODES = {}
 HS_ETH_CLOCKS = {}
 HS_ETH_FQS = {}         # Dict of lists, allowed freqs per interface
 HS_ETH_FQ = {}          # Dict, picked freq per interface
+HS_ETH_CLOCK_FQS = {}
 HS_ETH_100G_USED = False
 VXLAN_100G = []
 DDR4 = []
@@ -159,10 +160,12 @@ USE_ARM = False
 root = et.parse(path + "/board.xml").getroot()
 BOARD = root.get("vendor") + ":" + root.get("name") + ":"
 components = root.find("components")
+interfaces = None
 for component in components:
     if component.get("type") == "fpga":
         FPGA = component.get("part_name")
         BOARD += component.get("name") + ":"
+        interfaces = component.find("interfaces")
     elif component.get("sub_type") == "sfp":
         modes = component.find("component_modes")
         for mode in modes:
@@ -230,6 +233,13 @@ for component in components:
                         PCIe = interfaces[0].get("name")
                         PCIe_RESET = interfaces[1].get("name")
                         PCIe_CLOCK = interfaces[2].get("name")
+
+for interface in interfaces:
+    for name in HS_ETH_CLOCKS:
+        if interface.get("name") == HS_ETH_CLOCKS[name]["10G"]:
+            for parameter in interface.find("parameters"):
+                if parameter.get("name") == "frequency":
+                    HS_ETH_CLOCK_FQS[name] = parameter.get("value")
 
 BOARD += root.find("file_version").text
 HS_ETH = list(HS_ETH)
@@ -336,6 +346,10 @@ with open("Parameters.tcl", "w") as script:
     for iface in HS_ETH:
         print(HS_ETH_CLOCKS[iface][HS_ETH_FQ[iface]], end=" ", file=script)
     print("}", file=script)
+    print("set QSFP_FREQS {", end="", file=script)
+    for iface in HS_ETH:
+        print(float(HS_ETH_CLOCK_FQS[iface]) / 1000000, end=" ", file=script)
+    print("}", file=script)
     print("set QSFP_SPEEDS {", end="", file=script)
     for iface in HS_ETH:
         print(HS_ETH_FQ[iface], end=" ", file=script)
@@ -368,7 +382,6 @@ with open("Parameters.tcl", "w") as script:
     print("set USER_CLOCK_DIVS {" + str(DIV1) + " " + str(DIV2) + "}", file=script)
     print("set USER_CLOCK " + str(SPEED), file=script)
 print_success("Generated configuration.")
-
 ###############################################################################################
 ######################################## Prerequisites ########################################
 ###############################################################################################

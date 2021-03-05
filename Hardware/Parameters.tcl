@@ -5,6 +5,7 @@ set QSFP_COUNT 2
 set QSFP_INTERFACES {qsfp0 qsfp1 }
 set QSFP_MODES {qsfp0_4x qsfp1_4x }
 set QSFP_CLOCKS {qsfp0_clock qsfp1_clock }
+set QSFP_FREQS {322.265625 322.265625 }
 set QSFP_SPEEDS {100G 100G }
 set QSFP_100_USED true
 set VXLAN_INTERFACES {2 2 }

@@ -1,6 +1,7 @@
 IPs/VXLAN-bridge/vxlan_bridge/
-IPs/AXI-GPIO/gpio/
+IPs/VXLAN-bridge/VXLAN_bridge.tcl
 FPGA_Shell/
 .Xil/
 **/*.log
 **/*.jou
+**/*.str

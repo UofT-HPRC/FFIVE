@@ -10,8 +10,6 @@ open_bd_design FPGA_Shell
 source VXLAN.tcl
 source QSFP.tcl
 
-create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 init
-connect_bd_intf_net [get_bd_intf_ports init] -boundary_type upper [get_bd_intf_pins QSFP/init]
 for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 	set QSFP_SPEED [lindex $QSFP_SPEEDS $QSFP_INDEX]
     if {$QSFP_SPEED == "100G"} {
