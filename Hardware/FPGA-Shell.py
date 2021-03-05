@@ -160,12 +160,12 @@ USE_ARM = False
 root = et.parse(path + "/board.xml").getroot()
 BOARD = root.get("vendor") + ":" + root.get("name") + ":"
 components = root.find("components")
-interfaces = None
+FPGA_interfaces = None
 for component in components:
     if component.get("type") == "fpga":
         FPGA = component.get("part_name")
         BOARD += component.get("name") + ":"
-        interfaces = component.find("interfaces")
+        FPGA_interfaces = component.find("interfaces")
     elif component.get("sub_type") == "sfp":
         modes = component.find("component_modes")
         for mode in modes:
@@ -234,7 +234,7 @@ for component in components:
                         PCIe_RESET = interfaces[1].get("name")
                         PCIe_CLOCK = interfaces[2].get("name")
 
-for interface in interfaces:
+for interface in FPGA_interfaces:
     for name in HS_ETH_CLOCKS:
         if interface.get("name") == HS_ETH_CLOCKS[name]["10G"]:
             for parameter in interface.find("parameters"):
