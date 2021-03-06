@@ -24,7 +24,7 @@ namespace FPGA_SHELL
         return tokens;
     }
 
-    uint32_t IPToHex(const std::string& IP_string)
+    uint32_t IPToInt(const std::string& IP_string)
     {
         std::vector<std::string> tokens = SplitString(IP_string, '.');
         uint32_t IP = 0;
@@ -45,6 +45,51 @@ namespace FPGA_SHELL
             }
         }
         return IP;
+    }
+
+    std::string IntToIP(const uint32_t IP)
+    {
+        std::string IP_string;
+        IP_string = std::to_string(IP >> 24) + ".";
+        IP_string += std::to_string((IP >> 16) & 0xFF) + ".";
+        IP_string += std::to_string((IP >> 8) & 0xFF) + ".";
+        IP_string += std::to_string(IP & 0xFF);
+        return IP_string;
+    }
+
+    uint64_t MACToInt(const std::string& MAC_string)
+    {
+        std::vector<std::string> tokens = SplitString(MAC_string, ':');
+        uint64_t MAC = 0;
+        for (std::string& token: tokens)
+        {
+            MAC = MAC << 8;
+            try
+            {
+                MAC += std::stoi(token);
+            }
+            catch (std::invalid_argument const &e)
+            {
+                std::cerr << "Bad input: std::invalid_argument thrown" << '\n';
+            }
+            catch (std::out_of_range const &e)
+            {
+                std::cerr << "Integer overflow: std::out_of_range thrown" << '\n';
+            }
+        }
+        return MAC;
+    }
+
+    std::string IntToMAC(const uint64_t MAC)
+    {
+        std::string MAC_string;
+        MAC_string += std::to_string((MAC >> 40) & 0xFF) + ":";
+        MAC_string += std::to_string((MAC >> 32) & 0xFF) + ":";
+        MAC_string += std::to_string((MAC >> 24) & 0xFF) + ":";
+        MAC_string += std::to_string((MAC >> 16) & 0xFF) + ":";
+        MAC_string += std::to_string((MAC >> 8) & 0xFF) + ":";
+        MAC_string += std::to_string(MAC & 0xFF);
+        return MAC_string;
     }
 
     void PrintTrace()
