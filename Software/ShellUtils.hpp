@@ -2,6 +2,7 @@
 #define SHELL_UTILS_HPP
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <execinfo.h>
 #include <stdexcept>
@@ -66,7 +67,7 @@ namespace FPGA_SHELL
             MAC = MAC << 8;
             try
             {
-                MAC += std::stoi(token);
+                MAC += std::stoi(token, 0, 16);
             }
             catch (std::invalid_argument const &e)
             {
@@ -82,14 +83,14 @@ namespace FPGA_SHELL
 
     std::string IntToMAC(const uint64_t MAC)
     {
-        std::string MAC_string;
-        MAC_string += std::to_string((MAC >> 40) & 0xFF) + ":";
-        MAC_string += std::to_string((MAC >> 32) & 0xFF) + ":";
-        MAC_string += std::to_string((MAC >> 24) & 0xFF) + ":";
-        MAC_string += std::to_string((MAC >> 16) & 0xFF) + ":";
-        MAC_string += std::to_string((MAC >> 8) & 0xFF) + ":";
-        MAC_string += std::to_string(MAC & 0xFF);
-        return MAC_string;
+        std::stringstream MAC_string;
+        MAC_string << std::hex << ((MAC >> 40) & 0xFF) << ":";
+        MAC_string << std::hex << ((MAC >> 32) & 0xFF) << ":";
+        MAC_string << std::hex << ((MAC >> 24) & 0xFF) << ":";
+        MAC_string << std::hex << ((MAC >> 16) & 0xFF) << ":";
+        MAC_string << std::hex << ((MAC >> 8) & 0xFF) << ":";
+        MAC_string << std::hex << (MAC & 0xFF);
+        return MAC_string.str();
     }
 
     void PrintTrace()

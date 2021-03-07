@@ -5,6 +5,7 @@
 #include "docopt.h"
 #include "ShellAccess.hpp"
 #include "ShellUtils.hpp"
+#include "ShellMMap.hpp"
 
 const std::string USAGE = 
 R"(VNF Shell Config.
@@ -34,7 +35,7 @@ A simple program to configure our 100G VNF Shell.
         Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --local_port <port>
         Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --remote_port <port>
         Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --vni <vni>
-        
+
     Options:
         -h --help                   Show this help message.
         -i --init                   Initialize the system. Must have already written the necessary configuration first.
@@ -57,135 +58,138 @@ A simple program to configure our 100G VNF Shell.
 int main(int argc, char** argv)
 {
     std::map<std::string, docopt::value> args = docopt::docopt(USAGE, {argv + 1, argv + argc}, true, "Shell v1.0");
+    
+    int32_t fd = -1;
+    fd = FPGA_SHELL::OpenPhysical(fd);
 
-    if (args["--info"])
+    if (args["--info"].asBool())
     {
-        std::cout << "Vendor: " << FPGA_SHELL::GetShellVendor() << "\n";
-        std::cout << "Name: " << FPGA_SHELL::GetShellName() << "\n";
-        std::cout << "Version: " << FPGA_SHELL::GetShellVersion() << "\n";
+        std::cout << "Vendor: " << FPGA_SHELL::GetShellVendor(fd) << "\n";
+        std::cout << "Name: " << FPGA_SHELL::GetShellName(fd) << "\n";
+        std::cout << "Version: " << FPGA_SHELL::GetShellVersion(fd) << "\n";
     }
-    else if (args["--eth_count"])
+    else if (args["--eth_count"].asBool())
     {
-        std::cout << "ETH Count: " << FPGA_SHELL::GetNumQSFPs() << "\n";
+        std::cout << "ETH Count: " << FPGA_SHELL::GetNumQSFPs(fd) << "\n";
     }
     else if (args["--eth"] && !args["--vxlan"])
     {
         uint8_t eth = std::stoi(args["--eth"].asString());
-        if (args["--speed"])
+        if (args["--speed"].asBool())
         {
-            std::cout << "ETH" << eth << " Speed: " << FPGA_SHELL::GetQSFPSpeed(eth) << "\n";
+            std::cout << "ETH" << eth << " Speed: " << FPGA_SHELL::GetQSFPSpeed(fd, eth) << "\n";
         }
-        else if (args["--vxlans"])
+        else if (args["--vxlans"].asBool())
         {
-            std::cout << "ETH" << eth << " VXLAN Count: " << FPGA_SHELL::GetQSFPVXLANs(eth) << "\n";
+            std::cout << "ETH" << eth << " VXLAN Count: " << FPGA_SHELL::GetQSFPVXLANs(fd, eth) << "\n";
         }
-        else if (args["--stats"])
+        else if (args["--stats"].asBool())
         {
-            std::cout << "ETH" << eth << " All RX Bytes: " << FPGA_SHELL::GetQSFPAllRXBytes(eth) << "\n";
-            std::cout << "ETH" << eth << " Good RX Bytes: " << FPGA_SHELL::GetQSFPGoodRXBytes(eth) << "\n";
-            std::cout << "ETH" << eth << " All TX Bytes: " << FPGA_SHELL::GetQSFPAllTXBytes(eth) << "\n";
-            std::cout << "ETH" << eth << " Good TX Bytes: " << FPGA_SHELL::GetQSFPGoodTXBytes(eth) << "\n";
+            std::cout << "ETH" << eth << " All RX Bytes: " << FPGA_SHELL::GetQSFPAllRXBytes(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Good RX Bytes: " << FPGA_SHELL::GetQSFPGoodRXBytes(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " All TX Bytes: " << FPGA_SHELL::GetQSFPAllTXBytes(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Good TX Bytes: " << FPGA_SHELL::GetQSFPGoodTXBytes(fd, eth) << "\n";
 
-            std::cout << "ETH" << eth << " All RX Packets: " << FPGA_SHELL::GetQSFPAllRXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Good RX Packets: " << FPGA_SHELL::GetQSFPGoodRXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Unicast RX Packets: " << FPGA_SHELL::GetQSFPUnicastRXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Multicast RX Packets: " << FPGA_SHELL::GetQSFPMulticastRXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Broadcast RX Packets: " << FPGA_SHELL::GetQSFPBroadcastRXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " All TX Packets: " << FPGA_SHELL::GetQSFPAllTXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Good TX Packets: " << FPGA_SHELL::GetQSFPGoodTXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Unicast TX Packets: " << FPGA_SHELL::GetQSFPUnicastTXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Multicast TX Packets: " << FPGA_SHELL::GetQSFPMulticastTXPackets(eth) << "\n";
-            std::cout << "ETH" << eth << " Broadcast TX Packets: " << FPGA_SHELL::GetQSFPBroadcastTXPackets(eth) << "\n";
+            std::cout << "ETH" << eth << " All RX Packets: " << FPGA_SHELL::GetQSFPAllRXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Good RX Packets: " << FPGA_SHELL::GetQSFPGoodRXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Unicast RX Packets: " << FPGA_SHELL::GetQSFPUnicastRXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Multicast RX Packets: " << FPGA_SHELL::GetQSFPMulticastRXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Broadcast RX Packets: " << FPGA_SHELL::GetQSFPBroadcastRXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " All TX Packets: " << FPGA_SHELL::GetQSFPAllTXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Good TX Packets: " << FPGA_SHELL::GetQSFPGoodTXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Unicast TX Packets: " << FPGA_SHELL::GetQSFPUnicastTXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Multicast TX Packets: " << FPGA_SHELL::GetQSFPMulticastTXPackets(fd, eth) << "\n";
+            std::cout << "ETH" << eth << " Broadcast TX Packets: " << FPGA_SHELL::GetQSFPBroadcastTXPackets(fd, eth) << "\n";
         }
     }
-    else if (args["--udp"] && args["--read"])
+    else if (args["--udp"] && args["--read"].asBool())
     {
         uint8_t udp = std::stoi(args["--udp"].asString());
-        if (args["--ip"])
+        if (args["--ip"].asBool())
         {
-            std::cout << "UDP" << udp << " IP: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamIP(udp)) << "\n";
+            std::cout << "UDP" << udp << " IP: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamIP(fd, udp)) << "\n";
         }
-        else if (args["--gateway"])
+        else if (args["--gateway"].asBool())
         {
-            std::cout << "UDP" << udp << " Gateway: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamGateway(udp)) << "\n";
+            std::cout << "UDP" << udp << " Gateway: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamGateway(fd, udp)) << "\n";
         }
-        else if (args["--netmask"])
+        else if (args["--netmask"].asBool())
         {
-            std::cout << "UDP" << udp << " Netmask: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamNetmask(udp)) << "\n";
+            std::cout << "UDP" << udp << " Netmask: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamNetmask(fd, udp)) << "\n";
         }
-        else if (args["--mac"])
+        else if (args["--mac"].asBool())
         {
-            std::cout << "UDP" << udp << " MAC: " << FPGA_SHELL::IntToMAC(FPGA_SHELL::GetGulfStreamMAC(udp)) << "\n";
+            std::cout << "UDP" << udp << " MAC: " << FPGA_SHELL::IntToMAC(FPGA_SHELL::GetGulfStreamMAC(fd, udp)) << "\n";
         }
     }
-    else if (args["-udp"] && args["--write"])
+    else if (args["--udp"] && args["--write"].asBool())
     {
         uint8_t udp = std::stoi(args["--udp"].asString());
-        if (args["--ip"])
+        if (args["--ip"].asBool())
         {
             uint32_t IP = FPGA_SHELL::IPToInt(args["<ip>"].asString());
-            FPGA_SHELL::SetGulfStreamIP(udp, IP);
+            FPGA_SHELL::SetGulfStreamIP(fd, udp, IP);
         }
-        else if (args["--gateway"])
+        else if (args["--gateway"].asBool())
         {
             uint32_t gateway = FPGA_SHELL::IPToInt(args["<gateway>"].asString());
-            FPGA_SHELL::SetGulfStreamGateway(udp, gateway);
+            FPGA_SHELL::SetGulfStreamGateway(fd, udp, gateway);
         }
-        else if (args["--netmask"])
+        else if (args["--netmask"].asBool())
         {
             uint32_t netmask = FPGA_SHELL::IPToInt(args["<netmask>"].asString());
-            FPGA_SHELL::SetGulfStreamNetmask(udp, netmask);
+            FPGA_SHELL::SetGulfStreamNetmask(fd, udp, netmask);
         }
-        else if (args["--mac"])
+        else if (args["--mac"].asBool())
         {
             uint64_t MAC = FPGA_SHELL::MACToInt(args["<mac>"].asString());
-            FPGA_SHELL::SetGulfStreamMAC(udp, MAC);
+            FPGA_SHELL::SetGulfStreamMAC(fd, udp, MAC);
         }
     }
-    else if (args["--eth"] && args["--vxlan"] && args["--read"])
+    else if (args["--eth"] && args["--vxlan"] && args["--read"].asBool())
     {
         uint8_t eth = std::stoi(args["--eth"].asString());
         uint8_t vxlan = std::stoi(args["--vxlan"].asString());
-        if (args["--ip"])
+        if (args["--ip"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " IP: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetVXLANRemoteIP(eth, vxlan)) << "\n";
+            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " IP: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetVXLANRemoteIP(fd, eth, vxlan)) << "\n";
         }
-        else if (args["--local_port"])
+        else if (args["--local_port"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " Local Port: " << FPGA_SHELL::GetVXLANLocalPort(eth, vxlan) << "\n";
+            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " Local Port: " << FPGA_SHELL::GetVXLANLocalPort(fd, eth, vxlan) << "\n";
         }
-        else if (args["--remote_port"])
+        else if (args["--remote_port"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " Remote Port: " << FPGA_SHELL::GetVXLANRemotePort(eth, vxlan) << "\n";
+            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " Remote Port: " << FPGA_SHELL::GetVXLANRemotePort(fd, eth, vxlan) << "\n";
         }
-        else if (args["--VNI"])
+        else if (args["--vni"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " VNI: " << FPGA_SHELL::GetVXLANVNI(eth, vxlan) << "\n";
+            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " VNI: " << FPGA_SHELL::GetVXLANVNI(fd, eth, vxlan) << "\n";
         }
     }
-    else if (args["--eth"] && args["--vxlan"] && args["--write"])
+    else if (args["--eth"] && args["--vxlan"] && args["--write"].asBool())
     {
         uint8_t eth = std::stoi(args["--eth"].asString());
         uint8_t vxlan = std::stoi(args["--vxlan"].asString());
-        if (args["--ip"])
+        if (args["--ip"].asBool())
         {
             uint32_t IP = FPGA_SHELL::IPToInt(args["<ip>"].asString());
-            FPGA_SHELL::SetVXLANRemoteIP(eth, vxlan, IP);
+            FPGA_SHELL::SetVXLANRemoteIP(fd, eth, vxlan, IP);
         }
-        else if (args["--local_port"])
+        else if (args["--local_port"].asBool())
         {
             uint32_t port = std::stoi(args["<port>"].asString());
-            FPGA_SHELL::SetVXLANLocalPort(eth, vxlan, port);
+            FPGA_SHELL::SetVXLANLocalPort(fd, eth, vxlan, port);
         }
-        else if (args["--remote_port"])
+        else if (args["--remote_port"].asBool())
         {
             uint32_t port = std::stoi(args["<port>"].asString());
-            FPGA_SHELL::SetVXLANRemotePort(eth, vxlan, port);
+            FPGA_SHELL::SetVXLANRemotePort(fd, eth, vxlan, port);
         }
-        else if (args["--VNI"])
+        else if (args["--vni"].asBool())
         {
             uint32_t VNI = std::stoi(args["<vni>"].asString());
-            FPGA_SHELL::SetVXLANVNI(eth, vxlan, VNI);
+            FPGA_SHELL::SetVXLANVNI(fd, eth, vxlan, VNI);
         }
     }
     else
@@ -193,8 +197,11 @@ int main(int argc, char** argv)
         std::cerr << "Unknown command arguments.\n";
         for (const auto& arg: args)
         {
-            std::cout << arg.first << "\t" << arg.second << "\n";
+            std::cout << arg.first << ":\t\t" << arg.second.isBool() << ", " << arg.second.isLong() << ", " << arg.second.isString() << ", " << arg.second.isStringList() << ", " << arg.second << "\n";
         }
         FPGA_SHELL::PrintTrace();
     }
+
+    FPGA_SHELL::ClosePhysical(fd);
+    return 0;
 }
