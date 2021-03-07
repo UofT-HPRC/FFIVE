@@ -319,9 +319,9 @@ SHELL = SHELL.encode("utf-8")
 SHELL += bytes([0]*(32-len(SHELL)))
 with open("AXI4_RAM.mif", "w") as mem:
     for i in range(0, 32, 4):
-        print(VENDOR[i:i+4].hex(), file=mem)
+        print(("%02X" % VENDOR[i+3]) + ("%02X" % VENDOR[i+2]) + ("%02X" % VENDOR[i+1]) + ("%02X" % VENDOR[i]), file=mem)
     for i in range(0, 32, 4):
-        print(SHELL[i:i+4].hex(), file=mem)
+        print(("%02X" % SHELL[i+3]) + ("%02X" % SHELL[i+2]) + ("%02X" % SHELL[i+1]) + ("%02X" % SHELL[i]), file=mem)
     print(bytes([0, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH]).hex(), file=mem)
     print(bytes([0, 0, 0, 0]).hex(), file=mem)
     print(bytes([0, 0, 0, 0]).hex(), file=mem)
