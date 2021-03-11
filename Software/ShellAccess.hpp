@@ -142,7 +142,7 @@ namespace FPGA_SHELL
         volatile uint32_t* aligned = (volatile uint32_t*)(QSFPS_base + (QSFPS_SPAN * index) + 0x0204);
         *RX = 0x01;
         *TX = 0x10;
-        while (!(*aligned & 0x10));
+        while (!(*aligned & 0x2));
         *TX = 0x01;
         UnmapPhysical(QSFPS_base, QSFPS_SPAN * ID_RAM_QSFPS_COUNT);
     }

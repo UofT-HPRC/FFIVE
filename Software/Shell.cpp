@@ -68,6 +68,15 @@ int main(int argc, char** argv)
         std::cout << "Name: " << FPGA_SHELL::GetShellName(fd) << "\n";
         std::cout << "Version: " << FPGA_SHELL::GetShellVersion(fd) << "\n";
     }
+    else if (args["--init"].asBool())
+    {
+        uint32_t count = FPGA_SHELL::GetNumQSFPs(fd);
+        for (uint32_t i = 0; i < count; i++)
+        {
+            FPGA_SHELL::InitQSFP(fd, i);
+            FPGA_SHELL::EnableGulfStream(fd, i);
+        }
+    }
     else if (args["--eth_count"].asBool())
     {
         std::cout << "ETH Count: " << FPGA_SHELL::GetNumQSFPs(fd) << "\n";
