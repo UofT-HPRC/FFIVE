@@ -9,6 +9,7 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.1 PCIe/util_ds_buf_0
 create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 PCIe/clk_wiz_0
 create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 PCIe/VNF_clk_reset_core
 create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 PCIe/network_reset_core
+create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 PCIe/config_reset_core
 
 # Configuration
 set_property -dict [list CONFIG.SYS_RST_N_BOARD_INTERFACE $PCIe_RESET CONFIG.PCIE_BOARD_INTERFACE $PCIe CONFIG.functional_mode {DMA} CONFIG.mode_selection {Advanced} CONFIG.en_axi_slave_if {false} CONFIG.xdma_axilite_slave {false} CONFIG.en_gt_selection {true} CONFIG.coreclk_freq {500} CONFIG.ref_clk_freq {100_MHz} CONFIG.plltype {QPLL1} CONFIG.PF0_DEVICE_ID_mqdma {903F} CONFIG.PF2_DEVICE_ID_mqdma {903F} CONFIG.PF3_DEVICE_ID_mqdma {903F}] [get_bd_cells PCIe/XDMA]
@@ -45,7 +46,7 @@ connect_bd_intf_net [get_bd_intf_pins PCIe/VNF_ctrl] -boundary_type upper [get_b
 connect_bd_intf_net [get_bd_intf_pins PCIe/$PCIe] [get_bd_intf_pins PCIe/XDMA/pcie_mgt]
 connect_bd_intf_net [get_bd_intf_pins PCIe/pcie_clk] [get_bd_intf_pins PCIe/util_ds_buf_0/CLK_IN_D]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/S00_ACLK] [get_bd_pins PCIe/XDMA/axi_aclk]
-connect_bd_net [get_bd_pins PCIe/XDMA/axi_aresetn] [get_bd_pins PCIe/XDMA_interconnect/ARESETN]
+connect_bd_net [get_bd_pins PCIe/config_reset_core/interconnect_aresetn] [get_bd_pins PCIe/XDMA_interconnect/ARESETN]
 connect_bd_net [get_bd_pins PCIe/clk_wiz_0/clk_out3] [get_bd_pins PCIe/XDMA_interconnect/ACLK]
 connect_bd_net [get_bd_pins PCIe/config_clk] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M00_ACLK] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
@@ -53,11 +54,10 @@ connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M01_ACLK] [get_bd_pins PCIe/c
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M02_ACLK] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M03_ACLK] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/S00_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M00_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M01_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M02_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M03_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/config_reset] [get_bd_pins PCIe/XDMA/axi_aresetn]
+connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M00_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
+connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M01_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
+connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M02_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
+connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M03_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins PCIe/xlconstant_0/dout] [get_bd_pins PCIe/XDMA/usr_irq_req]
 connect_bd_net [get_bd_pins PCIe/util_ds_buf_0/IBUF_OUT] [get_bd_pins PCIe/XDMA/sys_clk_gt]
 connect_bd_net [get_bd_pins PCIe/util_ds_buf_0/IBUF_DS_ODIV2] [get_bd_pins PCIe/XDMA/sys_clk]
@@ -70,8 +70,11 @@ connect_bd_net [get_bd_pins PCIe/network_clk] [get_bd_pins PCIe/clk_wiz_0/clk_ou
 connect_bd_net [get_bd_pins PCIe/VNF_clk_reset_core/interconnect_aresetn] [get_bd_pins PCIe/XDMA_interconnect/M04_ARESETN]
 connect_bd_net [get_bd_pins PCIe/vnf_reset] [get_bd_pins PCIe/VNF_clk_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins PCIe/network_reset] [get_bd_pins PCIe/network_reset_core/interconnect_aresetn]
+connect_bd_net [get_bd_pins PCIe/config_reset] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins PCIe/network_reset_core/slowest_sync_clk] [get_bd_pins PCIe/clk_wiz_0/clk_out1]
 connect_bd_net [get_bd_pins PCIe/VNF_clk_reset_core/slowest_sync_clk] [get_bd_pins PCIe/clk_wiz_0/clk_out2]
-connect_bd_net [get_bd_pins PCIe/network_reset_core/ext_reset_in] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/VNF_clk_reset_core/ext_reset_in] [get_bd_pins PCIe/XDMA/axi_aresetn]
-connect_bd_net [get_bd_pins PCIe/clk_wiz_0/clk_in1] [get_bd_pins PCIe/util_ds_buf_0/IBUF_OUT]
+connect_bd_net [get_bd_pins PCIe/config_reset_core/slowest_sync_clk] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
+connect_bd_net [get_bd_pins PCIe/network_reset_core/ext_reset_in] [get_bd_pins PCIe/pcie_reset]
+connect_bd_net [get_bd_pins PCIe/VNF_clk_reset_core/ext_reset_in] [get_bd_pins PCIe/pcie_reset]
+connect_bd_net [get_bd_pins PCIe/config_reset_core/ext_reset_in] [get_bd_pins PCIe/pcie_reset]
+connect_bd_net [get_bd_pins PCIe/clk_wiz_0/clk_in1] [get_bd_pins PCIe/XDMA/axi_aclk]
