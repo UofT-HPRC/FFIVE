@@ -43,6 +43,7 @@ connect_bd_net [get_bd_pins DDR4/fpga_mem_clk] [get_bd_pins DDR4/axi_interconnec
 for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
     set SECOND_INDEX [expr $DDR4_INDEX + $DDR4_COUNT]
 	set DDR4_INTERFACE [lindex $DDR4_INTERFACES $DDR4_INDEX]
+    set_property -dict [list CONFIG.M0${DDR4_INDEX}_HAS_REGSLICE {4} CONFIG.M0${SECOND_INDEX}_HAS_REGSLICE {4}] [get_bd_cells DDR4/axi_interconnect]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/ddr4_clk_$DDR4_INDEX] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_SYS_CLK]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/ddr4_$DDR4_INDEX] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4]
 	connect_bd_intf_net [get_bd_intf_pins DDR4/axi_interconnect/M0${DDR4_INDEX}_AXI] [get_bd_intf_pins DDR4/$DDR4_INTERFACE/C0_DDR4_S_AXI]
