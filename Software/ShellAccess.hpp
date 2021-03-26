@@ -1,6 +1,7 @@
 #ifndef SHELL_ACCESS_HPP
 #define SHELL_ACCESS_HPP
 
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -10,6 +11,39 @@
 
 namespace FPGA_SHELL
 {
+    // 0. FPGA Clocks
+    void ConfigureClocks(const int32_t fd, const uint8_t div0, const uint8_t div1)
+    {
+        // References:
+        // 1. https://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascale-registers.html
+        // 2. https://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascale-registers.html#crl_apb___pl1_ref_ctrl.html
+        volatile char* CLOCKS_base = (volatile char*)MapPhysical(fd, CLOCKS_BASE, CLOCKS_SPAN);
+        volatile uint32_t* CLOCK0 = (volatile uint32_t*)(CLOCKS_base + CLOCKS_CLOCK0_OFFSET);
+        volatile uint32_t* CLOCK1 = (volatile uint32_t*)(CLOCKS_base + CLOCKS_CLOCK1_OFFSET);
+        volatile uint32_t* CLOCK2 = (volatile uint32_t*)(CLOCKS_base + CLOCKS_CLOCK2_OFFSET);
+        volatile uint32_t* CLOCK3 = (volatile uint32_t*)(CLOCKS_base + CLOCKS_CLOCK3_OFFSET);
+        // Clock 0 is 100MHz, divisors are 8, 1
+        *CLOCK0 = (8 << 8) |                    // Div 0
+                  (1 << 16) |                   // Div 1
+                  2 |                           // PLL
+                  (1 << 24);                    // Enable
+        // Clock 1 is 266MHz, divisors are 4, 1
+        *CLOCK1 = (4 << 8) |                    // Div 0
+                  (1 << 16) |                   // Div 1
+                  2 |                           // PLL
+                  (1 << 24);                    // Enable
+        // Clock 2 is 266MHz, divisors are 4, 1
+        *CLOCK2 = (4 << 8) |                    // Div 0
+                  (1 << 16) |                   // Div 1
+                  2 |                           // PLL
+                  (1 << 24);                    // Enable
+        // Clock 3 is design time configurable, divisors are div0 and div1
+        *CLOCK3 = (div0 << 8) |                    // Div 0
+                  (div1 << 16) |                   // Div 1
+                  2 |                           // PLL
+                  (1 << 24);                    // Enable
+    }
+
     // 1. System ID stuff
     // 1.1. Vendor
     std::string GetShellVendor(const int32_t fd)

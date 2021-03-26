@@ -381,7 +381,18 @@ with open("Parameters.tcl", "w") as script:
         print("set USE_ARM false", file=script)
     print("set USER_CLOCK_DIVS {" + str(DIV1) + " " + str(DIV2) + "}", file=script)
     print("set USER_CLOCK " + str(SPEED), file=script)
+
+with open("../ShellParameters.hpp", "w") as script:
+    print("#ifndef SHELL_PARAMETERS_HPP", file=script)
+    print("#define SHELL_PARAMETERS_HPP", file=script)
+    print("", file=script)
+    print("#define USER_CLOCK_DIV0 " + str(DIV1), file=script)
+    print("#define USER_CLOCK_DIV1 " + str(DIV2), file=script)
+    print("", file=script)
+    print("#endif // SHELL_PARAMETERS_HPP", file=script)
+
 print_success("Generated configuration.")
+
 ###############################################################################################
 ######################################## Prerequisites ########################################
 ###############################################################################################

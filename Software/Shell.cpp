@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "docopt.h"
+#include "ShellParameters.hpp"
 #include "ShellAccess.hpp"
 #include "ShellUtils.hpp"
 #include "ShellMMap.hpp"
@@ -13,6 +14,7 @@ A simple program to configure our 100G VNF Shell.
 
     Usage:
         Shell (-h | --help)
+        Shell (-c | --clock)
         Shell (-i | --init)
         Shell (-r | --read) --info
         Shell (-r | --read) --eth_count
@@ -38,6 +40,7 @@ A simple program to configure our 100G VNF Shell.
 
     Options:
         -h --help                   Show this help message.
+        -c --clock                  Configure the PL clock generators.
         -i --init                   Initialize the system. Must have already written the necessary configuration first.
         -r --read                   Read values.
         -w --write                  Configure values.
@@ -67,6 +70,10 @@ int main(int argc, char** argv)
         std::cout << "Vendor: " << FPGA_SHELL::GetShellVendor(fd) << "\n";
         std::cout << "Name: " << FPGA_SHELL::GetShellName(fd) << "\n";
         std::cout << "Version: " << FPGA_SHELL::GetShellVersion(fd) << "\n";
+    }
+    else if (args["--clock"].asBool())
+    {
+        FPGA_SHELL::ConfigureClocks(fd, USER_CLOCK_DIV0, USER_CLOCK_DIV1);
     }
     else if (args["--init"].asBool())
     {
