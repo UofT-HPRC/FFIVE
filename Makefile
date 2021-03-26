@@ -1,9 +1,17 @@
 G++ := aarch64-linux-gnu-g++
 
-HEADERS := $(wildcard Software/*.hpp)
-SOURCES := Software/Shell.cpp
+SHELL_HEADERS := $(wildcard Software/Shell*.hpp)
+SHELL_SOURCES := Software/Shell.cpp
 
-Software/Shell: $(SOURCES) $(HEADERS) Software/docopt.cpp/libdocopt.a
+USER_HEADERS := $(wildcard Software/User*.hpp)
+USER_SOURCES := Software/User.cpp
+
+Software: Software/User Software/Shell
+
+Software/User: $(USER_SOURCES) $(USER_HEADERS) Software/docopt.cpp/libdocopt.a
+	$(G++) -Wall -std=c++11 $< -ISoftware/docopt.cpp/ -LSoftware/docopt.cpp/ -l:libdocopt.a -o $@
+
+Software/Shell: $(SHELL_SOURCES) $(SHELL_HEADERS) Software/docopt.cpp/libdocopt.a
 	$(G++) -Wall -std=c++11 $< -ISoftware/docopt.cpp/ -LSoftware/docopt.cpp/ -l:libdocopt.a -o $@
 
 Software/docopt.cpp/libdocopt.a:

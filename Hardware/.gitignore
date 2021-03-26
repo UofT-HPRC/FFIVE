@@ -1,5 +1,6 @@
 IPs/VXLAN-bridge/vxlan_bridge/
 IPs/VXLAN-bridge/VXLAN_bridge.tcl
+IPs/GULF-Stream/
 FPGA_Shell/
 .Xil/
 **/*.log
