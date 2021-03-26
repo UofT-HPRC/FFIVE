@@ -17,6 +17,7 @@ VERSION_MAJOR=0
 VERSION_MINOR=1
 VERSION_PATCH=0
 SPEED_CODE={"10G": 0, "25G": 1, "40G": 2, "50G": 3, "100G": 4}
+EXAMPLES={"Wire", "Firewall", "Loopback", "TrafficGenerator"}
 
 ###############################################################################################
 ######################################### Input/Output ########################################
@@ -156,6 +157,7 @@ PCIe = None
 PCIe_CLOCK = None
 PCIe_RESET = None
 USE_ARM = False
+EXAMPLE = None
 
 root = et.parse(path + "/board.xml").getroot()
 BOARD = root.get("vendor") + ":" + root.get("name") + ":"
@@ -280,25 +282,105 @@ for iface, size in zip(DDR4, DDR4_SIZES):
 ###############################################################################################
 ####################################### Read User Config ######################################
 ###############################################################################################
-for eth in HS_ETH:
-    print_success("The following speeds are supported on " + eth + ": ")
-    for i in range(len(HS_ETH_FQS[eth])):
-        print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
-    HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
-for eth in HS_ETH:
-    VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8))
-SPEED = read_number("Enter the frequency of the user VNF clock, in MHz", 1, 800)
-DIV1 = int(800/SPEED)
-if DIV1 == 0:
-    DIV1 = 1
-if DIV1 > 63:
-    DIV1 = 63
-new_speed = 800/DIV1
-DIV2 = int(new_speed/SPEED)
-if DIV2 == 0:
-    DIV2 = 1
-if DIV2 > 63:
-    DIV2 = 63
+example = read_yesno("Would you like to generate an example", prefer_no=True)
+if not example:
+    for eth in HS_ETH:
+        print_success("The following speeds are supported on " + eth + ": ")
+        for i in range(len(HS_ETH_FQS[eth])):
+            print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
+        HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
+    for eth in HS_ETH:
+        VXLAN_100G.append(read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8))
+    SPEED = read_number("Enter the frequency of the user VNF clock, in MHz", 1, 800)
+    DIV1 = int(800/SPEED)
+    if DIV1 == 0:
+        DIV1 = 1
+    if DIV1 > 63:
+        DIV1 = 63
+    new_speed = 800/DIV1
+    DIV2 = int(new_speed/SPEED)
+    if DIV2 == 0:
+        DIV2 = 1
+    if DIV2 > 63:
+        DIV2 = 63
+else:
+    print_success("The following examples are available:")
+    for i in range(len(examples)):
+        print_info("\t" + str(i) + ".\t" + example)
+    EXAMPLE = EXAMPLES[read_number("Enter the example number you'd like to use", 0, len(EXAMPLES)-1)]
+    ###############################################
+    ################# Wire Example ################
+    ###############################################
+    if EXAMPLE is "Wire":
+        if len(HS_ETH) < 2:
+            print_error("Wire example requires two QSFP interfaces. Pick a different board.")
+        # Limit usage to 2 interfaces
+        HS_ETH = HS_ETH[0:2]
+        HS_ETH_MODES = HS_ETH_MODES[0:2]
+        HS_ETH_CLOCKS = HS_ETH_CLOCKS[0:2]
+        HS_ETH_FQS = HS_ETH_FQS[0:2]
+        HS_ETH_FQ = HS_ETH_FQ[0:2]
+        HS_ETH_CLOCK_FQS = HS_ETH_CLOCK_FQS[0:2]
+        # Configure the 2 interfaces
+        for eth in HS_ETH:
+            print_success("The following speeds are supported on " + eth + ": ")
+            for i in range(len(HS_ETH_FQS[eth])):
+                print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
+            HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
+        for eth in HS_ETH:
+            number = read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8)
+            while number % 2:
+                print_warning("Wire example requires an even number of VXLAN bridges")
+                number = read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8)
+            VXLAN_100G.append(number)
+        # The following isn't really needed, placeholder
+        SPEED = 200
+        DIV1 = int(800/SPEED)
+        if DIV1 == 0:
+            DIV1 = 1
+        if DIV1 > 63:
+            DIV1 = 63
+        new_speed = 800/DIV1
+        DIV2 = int(new_speed/SPEED)
+        if DIV2 == 0:
+            DIV2 = 1
+        if DIV2 > 63:
+            DIV2 = 63
+    ###############################################
+    ############### Firewall Example ##############
+    ###############################################
+    elif EXAMPLE is "Firewall":
+        if len(HS_ETH) < 2:
+            print_error("Firewall example requires two QSFP interfaces. Pick a different board.")
+        # Limit usage to 2 interfaces
+        HS_ETH = HS_ETH[0:2]
+        HS_ETH_MODES = HS_ETH_MODES[0:2]
+        HS_ETH_CLOCKS = HS_ETH_CLOCKS[0:2]
+        HS_ETH_FQS = HS_ETH_FQS[0:2]
+        HS_ETH_FQ = HS_ETH_FQ[0:2]
+        HS_ETH_CLOCK_FQS = HS_ETH_CLOCK_FQS[0:2]
+        # Configure the 2 interfaces
+        for eth in HS_ETH:
+            print_success("The following speeds are supported on " + eth + ": ")
+            for i in range(len(HS_ETH_FQS[eth])):
+                print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
+            HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
+        # This example only uses 1 VXLAN interface per network interface
+        VXLAN_100G.append(1)
+        VXLAN_100G.append(1)
+        SPEED = 100
+        DIV1 = int(800/SPEED)
+        if DIV1 == 0:
+            DIV1 = 1
+        if DIV1 > 63:
+            DIV1 = 63
+        new_speed = 800/DIV1
+        DIV2 = int(new_speed/SPEED)
+        if DIV2 == 0:
+            DIV2 = 1
+        if DIV2 > 63:
+            DIV2 = 63
+
 
 ###############################################################################################
 #################################### Create Vivado Scripts ####################################
@@ -381,8 +463,10 @@ with open("Parameters.tcl", "w") as script:
         print("set USE_ARM false", file=script)
     print("set USER_CLOCK_DIVS {" + str(DIV1) + " " + str(DIV2) + "}", file=script)
     print("set USER_CLOCK " + str(SPEED), file=script)
+    if EXAMPLE:
+        print("set EXAMPLE " + EXAMPLE, file=script)
 
-with open("../ShellParameters.hpp", "w") as script:
+with open("../Software/ShellParameters.hpp", "w") as script:
     print("#ifndef SHELL_PARAMETERS_HPP", file=script)
     print("#define SHELL_PARAMETERS_HPP", file=script)
     print("", file=script)

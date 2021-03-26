@@ -20,3 +20,8 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
         create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 VNF/VXLAN_${QSFP_INDEX}_${VXLAN_INDEX}_tx
     }
 }
+
+# Examples
+if {[info exists EXAMPLE]} {
+    source Examples/$EXAMPLE.tcl
+}
