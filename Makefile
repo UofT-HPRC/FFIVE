@@ -1,11 +1,10 @@
-ARM_G++ := aarch64-linux-gnu-g++
-X86_G++ := g++
+G++ := aarch64-linux-gnu-g++
 
 HEADERS := $(wildcard Software/*.hpp)
 SOURCES := Software/Shell.cpp
 
-Software/Shell: $(SOURCES) $(HEADERS)
-	$(ARM_G++) -Wall -std=c++11 $< -ISoftware/docopt.cpp/ -LSoftware/docopt.cpp/ -l:libdocopt.a -o $@
+Software/Shell: $(SOURCES) $(HEADERS) Software/docopt.cpp/libdocopt.a
+	$(G++) -Wall -std=c++11 $< -ISoftware/docopt.cpp/ -LSoftware/docopt.cpp/ -l:libdocopt.a -o $@
 
 Software/docopt.cpp/libdocopt.a:
-	cd Software/docopt.cpp/ && cmake . && make
+	cp Software/toolchain.cmake Software/docopt.cpp/toolchain.cmake && cd Software/docopt.cpp/ && cmake . -DCMAKE_TOOLCHAIN_FILE=./toolchain.cmake && make
