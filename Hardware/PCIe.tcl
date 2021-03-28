@@ -13,7 +13,9 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 PCIe/config_reset
 
 # Configuration
 set_property -dict [list CONFIG.SYS_RST_N_BOARD_INTERFACE $PCIe_RESET CONFIG.PCIE_BOARD_INTERFACE $PCIe CONFIG.functional_mode {DMA} CONFIG.mode_selection {Advanced} CONFIG.en_axi_slave_if {false} CONFIG.xdma_axilite_slave {false} CONFIG.en_gt_selection {true} CONFIG.coreclk_freq {500} CONFIG.ref_clk_freq {100_MHz} CONFIG.plltype {QPLL1} CONFIG.PF0_DEVICE_ID_mqdma {903F} CONFIG.PF2_DEVICE_ID_mqdma {903F} CONFIG.PF3_DEVICE_ID_mqdma {903F}] [get_bd_cells PCIe/XDMA]
-set_property -dict [list CONFIG.NUM_MI {5}] [get_bd_cells PCIe/XDMA_interconnect]
+set_property -dict [list CONFIG.axilite_master_en {true} CONFIG.axil_master_64bit_en {false}] [get_bd_cells PCIe/XDMA]
+set_property -dict [list CONFIG.NUM_SI {2} CONFIG.NUM_MI {5}] [get_bd_cells PCIe/XDMA_interconnect]
+set_property -dict [list CONFIG.M00_HAS_REGSLICE {4} CONFIG.M01_HAS_REGSLICE {4} CONFIG.M02_HAS_REGSLICE {4} CONFIG.M03_HAS_REGSLICE {4} CONFIG.M04_HAS_REGSLICE {4}] [get_bd_cells PCIe/XDMA_interconnect]
 set_property -dict [list CONFIG.XBAR_DATA_WIDTH.VALUE_SRC USER CONFIG.ENABLE_ADVANCED_OPTIONS {1} CONFIG.XBAR_DATA_WIDTH {512} CONFIG.SYNCHRONIZATION_STAGES {5}] [get_bd_cells PCIe/XDMA_interconnect]
 set_property -dict [list CONFIG.CONST_VAL {1}] [get_bd_cells PCIe/xlconstant_0]
 set_property -dict [list CONFIG.DIFF_CLK_IN_BOARD_INTERFACE $PCIe_CLOCK CONFIG.C_BUF_TYPE {IBUFDSGTE}] [get_bd_cells PCIe/util_ds_buf_0]
@@ -38,6 +40,7 @@ create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:pcie_7x_mgt_rtl:1.0 P
 
 # Connections
 connect_bd_intf_net [get_bd_intf_pins PCIe/XDMA/M_AXI] -boundary_type upper [get_bd_intf_pins PCIe/XDMA_interconnect/S00_AXI]
+connect_bd_intf_net [get_bd_intf_pins PCIe/XDMA/M_AXI_LITE] -boundary_type upper [get_bd_intf_pins PCIe/XDMA_interconnect/S01_AXI]
 connect_bd_intf_net [get_bd_intf_pins PCIe/ID_access] -boundary_type upper [get_bd_intf_pins PCIe/XDMA_interconnect/M00_AXI]
 connect_bd_intf_net [get_bd_intf_pins PCIe/QSFP_ctrl] -boundary_type upper [get_bd_intf_pins PCIe/XDMA_interconnect/M01_AXI]
 connect_bd_intf_net [get_bd_intf_pins PCIe/VXLAN_ctrl] -boundary_type upper [get_bd_intf_pins PCIe/XDMA_interconnect/M02_AXI]
@@ -46,6 +49,7 @@ connect_bd_intf_net [get_bd_intf_pins PCIe/VNF_ctrl] -boundary_type upper [get_b
 connect_bd_intf_net [get_bd_intf_pins PCIe/$PCIe] [get_bd_intf_pins PCIe/XDMA/pcie_mgt]
 connect_bd_intf_net [get_bd_intf_pins PCIe/pcie_clk] [get_bd_intf_pins PCIe/util_ds_buf_0/CLK_IN_D]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/S00_ACLK] [get_bd_pins PCIe/XDMA/axi_aclk]
+connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/S01_ACLK] [get_bd_pins PCIe/XDMA/axi_aclk]
 connect_bd_net [get_bd_pins PCIe/config_reset_core/interconnect_aresetn] [get_bd_pins PCIe/XDMA_interconnect/ARESETN]
 connect_bd_net [get_bd_pins PCIe/clk_wiz_0/clk_out3] [get_bd_pins PCIe/XDMA_interconnect/ACLK]
 connect_bd_net [get_bd_pins PCIe/config_clk] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
@@ -54,6 +58,7 @@ connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M01_ACLK] [get_bd_pins PCIe/c
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M02_ACLK] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M03_ACLK] [get_bd_pins PCIe/clk_wiz_0/clk_out3]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/S00_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
+connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/S01_ARESETN] [get_bd_pins PCIe/XDMA/axi_aresetn]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M00_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M01_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins PCIe/XDMA_interconnect/M02_ARESETN] [get_bd_pins PCIe/config_reset_core/interconnect_aresetn]
