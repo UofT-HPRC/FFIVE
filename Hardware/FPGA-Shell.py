@@ -515,6 +515,18 @@ except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))
     exit(6)
 
+if EXAMPLE is "Firewall":
+    with open("IPs/FPGA-BPF/vivado_scripts/config.mk", "w") as script:
+        print("""ip_name=\"axistream_packetfilt\"
+part_name=\"""" + FPGA + """\"""", file=script)
+    try:
+        subprocess.run("cd IPs/FPGA-BPF/vivado_scripts/ && make -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
+        subprocess.run("cd IPs/FPGA-BPF/utilities/chopper && vivado_hls hls.tcl chopper " + FPGA + " 3.103"), shell=True, check=True)
+        print_success("Built firewall example prerequisite IPs.")
+    except subprocess.SubprocessError as e:
+        print_error("Could not build firewall example prerequisite IPs: " + str(e))
+        exit(9)
+
 ###############################################################################################
 ######################################### Build Shell #########################################
 ###############################################################################################

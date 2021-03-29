@@ -7,3 +7,6 @@
 [submodule "Software/docopt.cpp"]
 	path = Software/docopt.cpp
 	url = https://github.com/docopt/docopt.cpp.git
+[submodule "Hardware/IPs/FPGA-BPF"]
+	path = Hardware/IPs/FPGA-BPF
+	url = https://github.com/UofT-HPRC/fpga-bpf.git
