@@ -49,3 +49,10 @@ for {set DDR4_INDEX 0} {$DDR4_INDEX < $DDR4_COUNT} {incr DDR4_INDEX} {
     assign_bd_address [get_bd_addr_segs DDR4/${DDR4_INTERFACE}/C0_DDR4_MEMORY_MAP/C0_DDR4_ADDRESS_BLOCK]
     exclude_bd_addr_seg [get_bd_addr_segs DDR4/${DDR4_INTERFACE}/C0_DDR4_MEMORY_MAP_CTRL/C0_REG] -target_address_space [get_bd_addr_spaces ARM/ARM/Data]
 }
+
+# Examples
+if {[info exists EXAMPLE]} {
+    if {[file exists Examples/${EXAMPLE}_ARM_AddressMapping.tcl] == 1} {
+        source Examples/${EXAMPLE}_ARM_AddressMapping.tcl
+    }
+}
