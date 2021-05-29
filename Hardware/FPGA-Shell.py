@@ -17,7 +17,7 @@ VERSION_MAJOR=0
 VERSION_MINOR=1
 VERSION_PATCH=0
 SPEED_CODE={"10G": 0, "25G": 1, "40G": 2, "50G": 3, "100G": 4}
-EXAMPLES={"Wire", "Firewall", "Loopback", "TrafficGenerator"}
+EXAMPLES=["Wire", "Firewall", "Loopback", "TrafficGenerator"]
 
 ###############################################################################################
 ######################################### Input/Output ########################################
@@ -305,8 +305,8 @@ if not example:
         DIV2 = 63
 else:
     print_success("The following examples are available:")
-    for i in range(len(examples)):
-        print_info("\t" + str(i) + ".\t" + example)
+    for i in range(len(EXAMPLES)):
+        print_info("\t" + str(i) + ".\t" + EXAMPLES[i])
     EXAMPLE = EXAMPLES[read_number("Enter the example number you'd like to use", 0, len(EXAMPLES)-1)]
     ###############################################
     ################# Wire Example ################
@@ -315,19 +315,19 @@ else:
         if len(HS_ETH) < 2:
             print_error("Wire example requires two QSFP interfaces. Pick a different board.")
         # Limit usage to 2 interfaces
-        HS_ETH = HS_ETH[0:2]
-        HS_ETH_MODES = HS_ETH_MODES[0:2]
-        HS_ETH_CLOCKS = HS_ETH_CLOCKS[0:2]
-        HS_ETH_FQS = HS_ETH_FQS[0:2]
-        HS_ETH_FQ = HS_ETH_FQ[0:2]
-        HS_ETH_CLOCK_FQS = HS_ETH_CLOCK_FQS[0:2]
+        # HS_ETH = HS_ETH[0:2]
+        # HS_ETH_MODES = HS_ETH_MODES[0:2]
+        # HS_ETH_CLOCKS = HS_ETH_CLOCKS[0:2]
+        # HS_ETH_FQS = HS_ETH_FQS[0:2]
+        # HS_ETH_FQ = HS_ETH_FQ[0:2]
+        # HS_ETH_CLOCK_FQS = HS_ETH_CLOCK_FQS[0:2]
         # Configure the 2 interfaces
-        for eth in HS_ETH:
+        for eth in HS_ETH[0:2]:
             print_success("The following speeds are supported on " + eth + ": ")
             for i in range(len(HS_ETH_FQS[eth])):
                 print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
             HS_ETH_FQ[eth] = HS_ETH_FQS[eth][read_number("Enter the speed number you'd like to use", 0, len(HS_ETH_FQS[eth])-1)]
-        for eth in HS_ETH:
+        for eth in HS_ETH[0:2]:
             number = read_number("Enter the number of VXLAN bridges required on " + eth, 1, 8)
             while number % 2:
                 print_warning("Wire example requires an even number of VXLAN bridges")
@@ -353,14 +353,14 @@ else:
         if len(HS_ETH) < 2:
             print_error("Firewall example requires two QSFP interfaces. Pick a different board.")
         # Limit usage to 2 interfaces
-        HS_ETH = HS_ETH[0:2]
-        HS_ETH_MODES = HS_ETH_MODES[0:2]
-        HS_ETH_CLOCKS = HS_ETH_CLOCKS[0:2]
-        HS_ETH_FQS = HS_ETH_FQS[0:2]
-        HS_ETH_FQ = HS_ETH_FQ[0:2]
-        HS_ETH_CLOCK_FQS = HS_ETH_CLOCK_FQS[0:2]
+        # HS_ETH = HS_ETH[0:2]
+        # HS_ETH_MODES = HS_ETH_MODES[0:2]
+        # HS_ETH_CLOCKS = HS_ETH_CLOCKS[0:2]
+        # HS_ETH_FQS = HS_ETH_FQS[0:2]
+        # HS_ETH_FQ = HS_ETH_FQ[0:2]
+        # HS_ETH_CLOCK_FQS = HS_ETH_CLOCK_FQS[0:2]
         # Configure the 2 interfaces
-        for eth in HS_ETH:
+        for eth in HS_ETH[0:2]:
             print_success("The following speeds are supported on " + eth + ": ")
             for i in range(len(HS_ETH_FQS[eth])):
                 print_info("\t" + str(i) + ".\t" + HS_ETH_FQS[eth][i])
@@ -521,7 +521,7 @@ if EXAMPLE is "Firewall":
 part_name=\"""" + FPGA + """\"""", file=script)
     try:
         subprocess.run("cd IPs/FPGA-BPF/vivado_scripts/ && make -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
-        subprocess.run("cd IPs/FPGA-BPF/utilities/chopper && vivado_hls hls.tcl chopper " + FPGA + " 3.103"), shell=True, check=True)
+        subprocess.run("cd IPs/FPGA-BPF/utilities/chopper && vivado_hls hls.tcl chopper " + FPGA + " 3.103", shell=True, check=True)
         print_success("Built firewall example prerequisite IPs.")
     except subprocess.SubprocessError as e:
         print_error("Could not build firewall example prerequisite IPs: " + str(e))
