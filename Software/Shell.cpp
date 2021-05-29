@@ -86,18 +86,18 @@ int main(int argc, char** argv)
     }
     else if (args["--eth_count"].asBool())
     {
-        std::cout << "ETH Count: " << FPGA_SHELL::GetNumQSFPs(fd) << "\n";
+        std::cout << FPGA_SHELL::GetNumQSFPs(fd) << "\n";
     }
     else if (args["--eth"] && !args["--vxlan"])
     {
         uint8_t eth = std::stoi(args["--eth"].asString());
         if (args["--speed"].asBool())
         {
-            std::cout << "ETH" << eth << " Speed: " << FPGA_SHELL::GetQSFPSpeed(fd, eth) << "\n";
+            std::cout << FPGA_SHELL::GetQSFPSpeed(fd, eth) << "\n";
         }
         else if (args["--vxlans"].asBool())
         {
-            std::cout << "ETH" << eth << " VXLAN Count: " << FPGA_SHELL::GetQSFPVXLANs(fd, eth) << "\n";
+            std::cout << FPGA_SHELL::GetQSFPVXLANs(fd, eth) << "\n";
         }
         else if (args["--stats"].asBool())
         {
@@ -123,19 +123,19 @@ int main(int argc, char** argv)
         uint8_t udp = std::stoi(args["--udp"].asString());
         if (args["--ip"].asBool())
         {
-            std::cout << "UDP" << udp << " IP: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamIP(fd, udp)) << "\n";
+            std::cout << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamIP(fd, udp)) << "\n";
         }
         else if (args["--gateway"].asBool())
         {
-            std::cout << "UDP" << udp << " Gateway: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamGateway(fd, udp)) << "\n";
+            std::cout << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamGateway(fd, udp)) << "\n";
         }
         else if (args["--netmask"].asBool())
         {
-            std::cout << "UDP" << udp << " Netmask: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamNetmask(fd, udp)) << "\n";
+            std::cout << FPGA_SHELL::IntToIP(FPGA_SHELL::GetGulfStreamNetmask(fd, udp)) << "\n";
         }
         else if (args["--mac"].asBool())
         {
-            std::cout << "UDP" << udp << " MAC: " << FPGA_SHELL::IntToMAC(FPGA_SHELL::GetGulfStreamMAC(fd, udp)) << "\n";
+            std::cout << FPGA_SHELL::IntToMAC(FPGA_SHELL::GetGulfStreamMAC(fd, udp)) << "\n";
         }
     }
     else if (args["--udp"] && args["--write"].asBool())
@@ -168,19 +168,19 @@ int main(int argc, char** argv)
         uint8_t vxlan = std::stoi(args["--vxlan"].asString());
         if (args["--ip"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " IP: " << FPGA_SHELL::IntToIP(FPGA_SHELL::GetVXLANRemoteIP(fd, eth, vxlan)) << "\n";
+            std::cout << FPGA_SHELL::IntToIP(FPGA_SHELL::GetVXLANRemoteIP(fd, eth, vxlan)) << "\n";
         }
         else if (args["--local_port"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " Local Port: " << FPGA_SHELL::GetVXLANLocalPort(fd, eth, vxlan) << "\n";
+            std::cout << FPGA_SHELL::GetVXLANLocalPort(fd, eth, vxlan) << "\n";
         }
         else if (args["--remote_port"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " Remote Port: " << FPGA_SHELL::GetVXLANRemotePort(fd, eth, vxlan) << "\n";
+            std::cout << FPGA_SHELL::GetVXLANRemotePort(fd, eth, vxlan) << "\n";
         }
         else if (args["--vni"].asBool())
         {
-            std::cout << "ETH" << eth << "-VXLAN" << vxlan << " VNI: " << FPGA_SHELL::GetVXLANVNI(fd, eth, vxlan) << "\n";
+            std::cout << FPGA_SHELL::GetVXLANVNI(fd, eth, vxlan) << "\n";
         }
     }
     else if (args["--eth"] && args["--vxlan"] && args["--write"].asBool())
