@@ -38,9 +38,9 @@ Run `make image`. It will query you for the image name and tag. This will copy t
 
 ## Publications
 
-1. Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul, FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark, in FCCM'20
-2. Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul, FFIVE: An FPGA Framework for Interactive VNF Environments, in FCCM'21
-3. Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul, A Framework Integrating FPGAs in VNF Networks, in NOF'21
+* Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul, FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark, in FCCM'20 [Paper](https://ieeexplore.ieee.org/document/9114665)
+* Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul, FFIVE: An FPGA Framework for Interactive VNF Environments, in FCCM'21 [Paper](https://ieeexplore.ieee.org/document/9444058)
+* Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul, A Framework Integrating FPGAs in VNF Networks, in NOF'21
 
 ## Citations
 
