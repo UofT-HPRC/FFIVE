@@ -11,12 +11,12 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 ARM/network_reset
 # Configuration
 source ARM_config.tcl
 set_property -dict [apply_preset arm_preset] [get_bd_cells ARM/ARM]
-set_property -dict [list CONFIG.NUM_MI {5}] [get_bd_cells ARM/ARM_interconnect]
+set_property -dict [list CONFIG.NUM_MI {6}] [get_bd_cells ARM/ARM_interconnect]
 set_property -dict [list CONFIG.PSU__FPGA_PL1_ENABLE {1}] [get_bd_cells ARM/ARM]
 set_property -dict [list CONFIG.PSU__CRL_APB__PL1_REF_CTRL__DIVISOR0 {3} CONFIG.PSU__CRL_APB__PL1_REF_CTRL__DIVISOR1 {1}] [get_bd_cells ARM/ARM]
 set_property -dict [list CONFIG.PSU__FPGA_PL2_ENABLE {1}] [get_bd_cells ARM/ARM]
 set_property -dict [list CONFIG.XBAR_DATA_WIDTH.VALUE_SRC USER CONFIG.ENABLE_ADVANCED_OPTIONS {1} CONFIG.XBAR_DATA_WIDTH {512} CONFIG.SYNCHRONIZATION_STAGES {5}] [get_bd_cells ARM/ARM_interconnect]
-set_property -dict [list CONFIG.M00_HAS_REGSLICE {4} CONFIG.M01_HAS_REGSLICE {4} CONFIG.M02_HAS_REGSLICE {4} CONFIG.M03_HAS_REGSLICE {4} CONFIG.M04_HAS_REGSLICE {4}] [get_bd_cells ARM/ARM_interconnect]
+set_property -dict [list CONFIG.M00_HAS_REGSLICE {4} CONFIG.M01_HAS_REGSLICE {4} CONFIG.M02_HAS_REGSLICE {4} CONFIG.M03_HAS_REGSLICE {4} CONFIG.M04_HAS_REGSLICE {4} CONFIG.M05_HAS_REGSLICE {4}] [get_bd_cells ARM/ARM_interconnect]
 set DIV1 [lindex ${USER_CLOCK_DIVS} 0]
 set DIV2 [lindex ${USER_CLOCK_DIVS} 1]
 set_property -dict [list CONFIG.PSU__CRL_APB__PL2_REF_CTRL__DIVISOR0 ${DIV1} CONFIG.PSU__CRL_APB__PL2_REF_CTRL__DIVISOR1 ${DIV2}] [get_bd_cells ARM/ARM]
@@ -32,6 +32,7 @@ create_bd_pin -dir O ARM/vnf_reset
 create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/VXLAN_ctrl
 create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/QSFP_ctrl
 create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/VNF_ctrl
+create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/User
 create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/DDR4_access
 create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/ID_access
 create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 ARM/ARM_DDR4_access
@@ -43,6 +44,7 @@ connect_bd_intf_net [get_bd_intf_pins ARM/QSFP_ctrl] -boundary_type upper [get_b
 connect_bd_intf_net [get_bd_intf_pins ARM/VXLAN_ctrl] -boundary_type upper [get_bd_intf_pins ARM/ARM_interconnect/M02_AXI]
 connect_bd_intf_net [get_bd_intf_pins ARM/DDR4_access] -boundary_type upper [get_bd_intf_pins ARM/ARM_interconnect/M03_AXI]
 connect_bd_intf_net [get_bd_intf_pins ARM/VNF_ctrl] -boundary_type upper [get_bd_intf_pins ARM/ARM_interconnect/M04_AXI]
+connect_bd_intf_net [get_bd_intf_pins ARM/User] -boundary_type upper [get_bd_intf_pins ARM/ARM_interconnect/M05_AXI]
 connect_bd_intf_net [get_bd_intf_pins ARM/ARM_DDR4_access] [get_bd_intf_pins ARM/ARM/S_AXI_HP0_FPD]
 connect_bd_net [get_bd_pins ARM/ARM/pl_clk0] [get_bd_pins ARM/ARM_interconnect/ACLK]
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/S00_ACLK] [get_bd_pins ARM/ARM/pl_clk0]
@@ -66,11 +68,13 @@ connect_bd_net [get_bd_pins ARM/network_reset_core/slowest_sync_clk] [get_bd_pin
 connect_bd_net [get_bd_pins ARM/general_reset] [get_bd_pins ARM/ARM/pl_resetn0]
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/M03_ACLK] [get_bd_pins ARM/ARM/pl_clk0]
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/M03_ARESETN] [get_bd_pins ARM/ARM_clk_reset_core/interconnect_aresetn]
+connect_bd_net [get_bd_pins ARM/ARM_interconnect/M04_ACLK] [get_bd_pins ARM/ARM/pl_clk0]
+connect_bd_net [get_bd_pins ARM/ARM_interconnect/M04_ARESETN] [get_bd_pins ARM/ARM_clk_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/M00_ACLK] [get_bd_pins ARM/ARM/pl_clk0]
 connect_bd_net [get_bd_pins ARM/ARM_interconnect/M00_ARESETN] [get_bd_pins ARM/ARM_clk_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins ARM/vnf_reset] [get_bd_pins ARM/VNF_clk_reset_core/interconnect_aresetn]
-connect_bd_net [get_bd_pins ARM/ARM_interconnect/M04_ARESETN] [get_bd_pins ARM/VNF_clk_reset_core/interconnect_aresetn]
+connect_bd_net [get_bd_pins ARM/ARM_interconnect/M05_ARESETN] [get_bd_pins ARM/VNF_clk_reset_core/interconnect_aresetn]
 connect_bd_net [get_bd_pins ARM/VNF_clk_reset_core/slowest_sync_clk] [get_bd_pins ARM/ARM/pl_clk2]
-connect_bd_net [get_bd_pins ARM/ARM_interconnect/M04_ACLK] [get_bd_pins ARM/ARM/pl_clk2]
+connect_bd_net [get_bd_pins ARM/ARM_interconnect/M05_ACLK] [get_bd_pins ARM/ARM/pl_clk2]
 connect_bd_net [get_bd_pins ARM/vnf_clk] [get_bd_pins ARM/ARM/pl_clk2]
 

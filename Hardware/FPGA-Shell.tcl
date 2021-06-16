@@ -1,7 +1,7 @@
 source Parameters.tcl
 create_project FPGA_Shell -part $FPGA $WORK_DIR/FPGA_Shell
 set_property board_part $BOARD [current_project]
-set_property ip_repo_paths {"IPs/GULF-Stream/" "IPs/lbus_axis_converter" "IPs/VXLAN-bridge" "IPs/IPLibrary"} [current_project]
+set_property ip_repo_paths {"IPs/GULF-Stream/" "IPs/lbus_axis_converter" "IPs/VXLAN-bridge" "IPs/IPLibrary" "IPs/FPGA-BPF"} [current_project]
 update_ip_catalog -rebuild
 create_bd_design FPGA_Shell
 open_bd_design FPGA_Shell
@@ -75,6 +75,7 @@ if {$USE_ARM} {
     connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VNF/fpga_mem] [get_bd_intf_pins DDR4/fpga_mem]
     connect_bd_intf_net -boundary_type upper [get_bd_intf_pins VNF/cpu_mem] [get_bd_intf_pins ARM/ARM_DDR4_access]
     connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ARM/VNF_ctrl] [get_bd_intf_pins VNF/VNF_config]
+    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ARM/User] [get_bd_intf_pins VNF/User]
     connect_bd_net [get_bd_pins ARM/vnf_clk] [get_bd_pins DDR4/fpga_mem_clk] -boundary_type upper
     connect_bd_net [get_bd_pins ARM/vnf_clk] [get_bd_pins VNF/user_clk] -boundary_type upper
     connect_bd_net [get_bd_pins ARM/vnf_reset] [get_bd_pins VNF/user_reset] -boundary_type upper

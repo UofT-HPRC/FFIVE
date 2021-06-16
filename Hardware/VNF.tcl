@@ -3,6 +3,7 @@ create_bd_cell -type hier VNF
 
 # Ports
 create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 VNF/VNF_config
+create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 VNF/User
 if {$USE_ARM} {
     create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 VNF/cpu_mem
 }

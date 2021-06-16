@@ -8,6 +8,10 @@ USER_HEADERS := $(wildcard Software/User*.hpp)
 USER_SOURCES := Software/User.cpp
 
 Container: Software Hardware
+	read -p "Enter image name (for example: user/image): " name && \
+	read -p "Enter image tag (for example: latest): " tag && \
+	docker build -t $$name:$$tag . && \
+	docker push $$name:$$tag
 
 Clean: Software/Clean Hardware/Clean
 
