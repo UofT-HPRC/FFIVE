@@ -84,13 +84,13 @@ These dependencies are already included in the code, you do not need to install 
 # Publications
 If you use FFIVE in your research, we ask that you cite the following papers:
 
-1. **FFIVE: An FPGA Framework for Interactive VNF Environments**
-_Juan Camilo Vega, Mohammad Ewais, Alberto Leon-Garcia, Paul Chow_  
-_2021 IEEE International Symposium On Field-Programmable Custom Computing Machines (FCCM 2021)_
-2. **A Framework Integrating FPGAs in VNF Networks**
-_Mohammad Ewais, Juan Camilo Vega, Alberto Leon-Garcia, Paul Chow_
-_12th International Conference on Network of the Future (NoF 2021)_
-**NOTE:** This paper was accepted but has not been made available yet
+1. **FFIVE: An FPGA Framework for Interactive VNF Environments**  
+   _Juan Camilo Vega, Mohammad Ewais, Alberto Leon-Garcia, Paul Chow_  
+   _2021 IEEE International Symposium On Field-Programmable Custom Computing Machines (FCCM 2021)_  
+2. **A Framework Integrating FPGAs in VNF Networks**  
+   _Mohammad Ewais, Juan Camilo Vega, Alberto Leon-Garcia, Paul Chow_  
+   _2021 12th International Conference on Network of the Future (NoF 2021)_  
+   **NOTE:** This paper was accepted but has not been made available yet
 
 ## Citations
 ```
@@ -98,15 +98,6 @@ _12th International Conference on Network of the Future (NoF 2021)_
   title={FFIVE: An FPGA Framework for Interactive VNF Environments},
   author={Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul},
   booktitle={2021 IEEE 29th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)},
-  pages={263--263},
-  year={2021},
-  organization={IEEE}
-}
-    
-@inproceedings{ewais2021nof,
-  title={### _A Framework Integrating FPGAs in VNF Networks_},
-  author={Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul},
-  booktitle={12th International Conference on Network of the Future (NoF)},
   pages={263--263},
   year={2021},
   organization={IEEE}
