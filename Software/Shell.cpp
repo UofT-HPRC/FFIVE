@@ -18,25 +18,25 @@ A simple program to configure our 100G VNF Shell.
         Shell (-i | --init)
         Shell (-r | --read) --info
         Shell (-r | --read) --eth_count
-        Shell (-r | --read) --eth=<eth_index> --speed
-        Shell (-r | --read) --eth=<eth_index> --vxlans
-        Shell (-r | --read) --eth=<eth_index> --stats
-        Shell (-r | --read) --udp=<eth_index> --ip
-        Shell (-r | --read) --udp=<eth_index> --gateway
-        Shell (-r | --read) --udp=<eth_index> --netmask
-        Shell (-r | --read) --udp=<eth_index> --mac
-        Shell (-w | --write) --udp=<eth_index> --ip <ip>
-        Shell (-w | --write) --udp=<eth_index> --gateway <gateway>
-        Shell (-w | --write) --udp=<eth_index> --netmask <netmask>
-        Shell (-w | --write) --udp=<eth_index> --mac <mac>
-        Shell (-r | --read) --eth=<eth_index> --vxlan=<vxlan_index> --ip
-        Shell (-r | --read) --eth=<eth_index> --vxlan=<vxlan_index> --local_port
-        Shell (-r | --read) --eth=<eth_index> --vxlan=<vxlan_index> --remote_port
-        Shell (-r | --read) --eth=<eth_index> --vxlan=<vxlan_index> --vni
-        Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --ip <ip>
-        Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --local_port <port>
-        Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --remote_port <port>
-        Shell (-w | --write) --eth=<eth_index> --vxlan=<vxlan_index> --vni <vni>
+        Shell (-r | --read) --eth <eth_index> --speed
+        Shell (-r | --read) --eth <eth_index> --vxlans
+        Shell (-r | --read) --eth <eth_index> --stats
+        Shell (-r | --read) --udp <eth_index> --ip
+        Shell (-r | --read) --udp <eth_index> --gateway
+        Shell (-r | --read) --udp <eth_index> --netmask
+        Shell (-r | --read) --udp <eth_index> --mac
+        Shell (-w | --write) --udp <eth_index> --ip <ip>
+        Shell (-w | --write) --udp <eth_index> --gateway <gateway>
+        Shell (-w | --write) --udp <eth_index> --netmask <netmask>
+        Shell (-w | --write) --udp <eth_index> --mac <mac>
+        Shell (-r | --read) --eth <eth_index> --vxlan <vxlan_index> --ip
+        Shell (-r | --read) --eth <eth_index> --vxlan <vxlan_index> --local_port
+        Shell (-r | --read) --eth <eth_index> --vxlan <vxlan_index> --remote_port
+        Shell (-r | --read) --eth <eth_index> --vxlan <vxlan_index> --vni
+        Shell (-w | --write) --eth <eth_index> --vxlan <vxlan_index> --ip <ip>
+        Shell (-w | --write) --eth <eth_index> --vxlan <vxlan_index> --local_port <port>
+        Shell (-w | --write) --eth <eth_index> --vxlan <vxlan_index> --remote_port <port>
+        Shell (-w | --write) --eth <eth_index> --vxlan <vxlan_index> --vni <vni>
 
     Options:
         -h --help                   Show this help message.
@@ -46,9 +46,9 @@ A simple program to configure our 100G VNF Shell.
         -w --write                  Configure values.
         --info                      Shell information, including vnedor, name, and version.
         --eth_count                 Number of high speed Ethernet interfaces on the shell.
-        --eth=<eth_index>           The index of the target Ethernet interface to read/configure. Starts at 0.
-        --udp=<eth_index>           The index of the UDP interface to read/configure. Starts at 0.
-        --vxlan=<vxlan_index>       The index of the VXLAN interface on its corresponding Ethernet interface.
+        --eth <eth_index>           The index of the target Ethernet interface to read/configure. Starts at 0.
+        --udp <eth_index>           The index of the UDP interface to read/configure. Starts at 0.
+        --vxlan <vxlan_index>       The index of the VXLAN interface on its corresponding Ethernet interface.
         --ip                        The IP address of the UDP core, or the remote IP address of the VXLAN core.
         --gateway                   The gateway of the UDP core.
         --netmask                   The netmask of the UDP core.
