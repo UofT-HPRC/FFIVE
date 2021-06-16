@@ -1,76 +1,121 @@
+
 # 100G-FFIVE: A framework for VNFs in FPGAs
 
+- [Summary](#summary)
+- [Usage](#usage)
+  * [Node level](#node-level)
+    + [Node level hardware](#node-level-hardware)
+    + [Node level software](#node-level-software)
+    + [Both](#both)
+  * [Cloud level](#cloud-level)
+- [Dependencies](#dependencies)
+  * [Software Dependencies](#software-dependencies)
+  * [Source Code Dependencies](#source-code-dependencies)
+- [Publications](#publications)
+  * [Citations](#citations)
+- [Contributors](#contributors)
+- [License](#license)
+
+# Summary
+This is the repository for the FFIVE framework, a framework for creating 100Gbps FPGA-based VNFs. The repository includes the following:
+1. TCL scripts to create the FPGA Shell required for FFIVE.
+2. TCL scripts to create some example VNFs.
+3. C++ programs for controlling and configuring the FPGA Shell.
+4. Python-based RESTful API to remotely configure the FPGA Shell.
+5. Base C++ and Python programs to configure the User VNF.
+6. A Python-based datacenter-level SDN controller to deploy CPU or FPGA-based VNFs.
+
+# Usage
 ## Node level
 ### Node level hardware
 This is the hardware of our VNF shell itself, it includes all the necessary components, which are:
-- The ARM core of the MPSoC, and its AXI connection to the FPGA
+- The ARM core of the MPSoC, and its AXI connection to the FPGA.
 - A DDR4 interface.
-- Two 100G Ethernet interfaces.
+- One or more 100G Ethernet interfaces.
 - A configurable number of VXLAN bridges on each of the network interfaces.
 
 To use and build the hardware part, do the following:
-1. Run `make hardware_base`.
-2. Enter the required number of VXLANs you want on each Ethernet interface.
-3. Select the frequency of extra clocks.
-4. The makefile will create a vivado project, open the project and add your VNF.
-5. Run `make hardware`, this will build the vivado project all the way to a bitstream.
+1. Run `make Hardware/Shell`.
+2. Pick the board you want to use.
+3. Pick the speed you want to use for each of the QSFP interfaces.
+4. Enter the required number of VXLANs you want on each Ethernet interface.
+5. Select the frequency of extra clocks.
+6. The Makefile will create a vivado project, open the project and add your VNF.
+7. Run `make Hardware/User`, this will build the Vivado project all the way to a bitstream.
 
 ### Node level software
 This is the software part of the VNF shell, it includes the C++ files to talk to and configure the hardware, as well as the python files that implement the RESTful API.
 
 To use and build do the following:
-1. Modify the `user_config.cpp` file similarly to `ffive_config.cpp`. Add the required addresses, memory maps, and program options.
-2. Modify the `user_api.py` file similarly to `ffive_api.py`. Add the required REST routes.
-3. Any libraries you used or added that may require installation must be handled in the `prereqs.sh` file.
-4. Run `make software`. This will cross compile the binaries for ARM64.
+1. Modify the `User*.hpp` files and `User.cpp` file similarly to their `Shell.cpp` and `Shell*.hpp` files. Add the required addresses, memory maps, and program options for your VNF.
+2. Modify the `UserAPI.py` file similarly to `ShellAPI.py`. Add the required REST routes.
+3. If your software requires external libraries or extra files, you may need to modify the Makefile and/or Dockerfile.
+4. Run `make Software`. This will cross compile the binaries for ARM64.
 
 ### Both
-Run `make image`. It will query you for the image name and tag. This will copy the hardware bitstream and the software binaries into the docker container. It will use the commands from `prereqs.sh` to install all the prerequisites inside the container. It will set up the container to program the FPGA and run the API once it is running. And finally, it will push the image to your docker hub repo.
+Run `make Container`. It will query you for the image name and tag. This will copy the hardware bitstream and the software binaries into the docker container. It will set up the container to program the FPGA and run the API once it is running. And finally, it will push the image to your docker hub repo.
 
 ## Cloud level
-1. Use the `config.yaml` file to build the hierarchy of your VNFs.
-2. Run `make` to build the docker image of the container.
-3. Use the `deploy.yaml` to deploy the controller on your kubernetes cluster. The controller will take care of deploying your VNFs and configuring them.
+1. Use the `Config.yaml` file to build the hierarchy of your VNFs.
+2. Run `make` to build the docker container.
+3. Your Kubernetes cluster must be running a device plugin that advertises FPGAs. We use the following plugin: https://github.com/mewais/FPGA-K8s-DevicePlugin
+4. Use the `Deploy.yaml` to deploy the controller on your kubernetes cluster. The controller will take care of deploying your VNFs and configuring them.
 
-## Dependencies
-1. Vivado 2018.3
-2. GCC
+# Dependencies
+## Software Dependencies
+These are dependencies you need to have installed before using the framework.
+1. Vivado 2020.2
+2. Vivado 2018.3 (Currently being phased out)
+3. Docker
+4. Git
+5. GCC/G++
+6. Docker
+7. Kubernetes
 
-## Publications
+## Source Code Dependencies
+These dependencies are already included in the code, you do not need to install any of them.
 
-* Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul, FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark, in FCCM'20 [Paper](https://ieeexplore.ieee.org/document/9114665)
-* Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul, FFIVE: An FPGA Framework for Interactive VNF Environments, in FCCM'21 [Paper](https://ieeexplore.ieee.org/document/9444058)
-* Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul, A Framework Integrating FPGAs in VNF Networks, in NOF'21*
+1. [docopt.cpp](https://github.com/docopt/docopt.cpp)
+2. [IPLibrary](https://github.com/mewais/IPLibrary)
+3. [GULF-Stream](https://github.com/QianfengClarkShen/GULF-Stream)
+4. [FPGA-BPF](https://github.com/UofT-HPRC/fpga-bpf)
+5. The repo also includes a firewall example which is based on the [FFShark paper](http://www.fccm.org/proceedings/2020/pdfs/FCCM2020-65FOvhMqzyMYm99lfeVKyl/580300a047/580300a047.pdf)
+
+# Publications
+If you use FFIVE in your research, we ask that you cite the following papers:
+
+1. **FFIVE: An FPGA Framework for Interactive VNF Environments**
+_Juan Camilo Vega, Mohammad Ewais, Alberto Leon-Garcia, Paul Chow_  
+_2021 IEEE International Symposium On Field-Programmable Custom Computing Machines (FCCM 2021)_
+2. **A Framework Integrating FPGAs in VNF Networks**
+_Mohammad Ewais, Juan Camilo Vega, Alberto Leon-Garcia, Paul Chow_
+_12th International Conference on Network of the Future (NoF 2021)_
+**NOTE:** This paper was accepted but has not been made available yet
 
 ## Citations
-
-If you use FFIVE or FFShark in your project please cite one of the following papers:
-
-1. @INPROCEEDINGS{FFShark_2020,
-  author={Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul},
-  booktitle={2020 IEEE 28th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)}, 
-  title={FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark}, 
-  year={2020},
-  volume={},
-  number={},
-  pages={47-55},
-  doi={10.1109/FCCM48280.2020.00016}}
-  
-2. @INPROCEEDINGS{FFIVE_poster,
+```
+@inproceedings{vega2021ffive,
+  title={FFIVE: An FPGA Framework for Interactive VNF Environments},
   author={Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul},
-  booktitle={2021 IEEE 29th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)}, 
-  title={FFIVE: An FPGA Framework for Interactive VNF Environments}, 
+  booktitle={2021 IEEE 29th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)},
+  pages={263--263},
   year={2021},
-  volume={},
-  number={},
-  pages={263-263},
-  doi={10.1109/FCCM51124.2021.00050}}
-  
-3. @INPROCEEDINGS{FFIVE_Paper*,
+  organization={IEEE}
+}
+    
+@inproceedings{ewais2021nof,
+  title={### _A Framework Integrating FPGAs in VNF Networks_},
   author={Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul},
-  booktitle={2021 IEEE 12th International Conference on Network of the Future (NOF)}, 
-  title={A Framework Integrating FPGAs in VNF Networks}, 
-  year={2021}
-  }
-  
-  \* This paper has been accepted but has not been made available yet
+  booktitle={12th International Conference on Network of the Future (NoF)},
+  pages={263--263},
+  year={2021},
+  organization={IEEE}
+}
+```
+
+# Contributors
+- [Mohammad Ewais](https://mohammad.ewais.ca), University of Toronto
+- [Juan Camilo Vega](https://github.com/Juancamilovega), University of Toronto
+
+# License
+FFIVE is licensed under the Academic Public License. For more information, check the [LICENSE](https://github.com/UofT-HPRC/FFIVE/blob/master/LICENSE) file.
