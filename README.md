@@ -35,3 +35,41 @@ Run `make image`. It will query you for the image name and tag. This will copy t
 ## Dependencies
 1. Vivado 2018.3
 2. GCC
+
+## Publications
+
+1. Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul, FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark, in FCCM'20
+2. Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul, FFIVE: An FPGA Framework for Interactive VNF Environments, in FCCM'21
+3. Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul, A Framework Integrating FPGAs in VNF Networks, in NOF'21
+
+## Citations
+
+If you use FFIVE or FFShark in your project please cite one of the following papers:
+
+1. @INPROCEEDINGS{FFShark_2020,
+  author={Vega, Juan Camilo and Merlini, Marco Antonio and Chow, Paul},
+  booktitle={2020 IEEE 28th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)}, 
+  title={FFShark: A 100G FPGA Implementation of BPF Filtering for Wireshark}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={47-55},
+  doi={10.1109/FCCM48280.2020.00016}}
+  
+2. @INPROCEEDINGS{FFIVE_poster,
+  author={Vega, Juan Camilo and Ewais, Mohammad and Garcia, Alberto Leon and Chow, Paul},
+  booktitle={2021 IEEE 29th Annual International Symposium on Field-Programmable Custom Computing Machines (FCCM)}, 
+  title={FFIVE: An FPGA Framework for Interactive VNF Environments}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={263-263},
+  doi={10.1109/FCCM51124.2021.00050}}
+  
+3. @INPROCEEDINGS{FFIVE_Paper*,
+  author={Ewais, Mohammad and Vega, Juan Camilo and Garcia, Alberto Leon and Chow, Paul},
+  booktitle={2021 IEEE 12th International Conference on Network of the Future (NOF)}, 
+  title={A Framework Integrating FPGAs in VNF Networks}, 
+  year={2021}
+  }
+  * This paper has been accepted but has not been made available yet
