@@ -103,14 +103,13 @@ If you use FFIVE in your research, we ask that you cite the following papers:
   organization={IEEE}
 }
 @INPROCEEDINGS{Vega2110:Framework,
-AUTHOR="Mohammad Ewais and Juan Camilo Vega and Alberto Leon-Garcia and Paul Chow",
-TITLE="A Framework Integrating {FPGAs} in {VNF} Networks",
-BOOKTITLE="2021 12th International Conference on Network of the Future (NoF) (NoF
-2021)",
-ADDRESS="University of Coimbra, Portugal",
-DAYS=5,
-MONTH=oct,
-YEAR=2021,
+  author="Mohammad Ewais and Juan Camilo Vega and Alberto Leon-Garcia and Paul Chow",
+  title="A Framework Integrating {FPGAs} in {VNF} Networks",
+  booktitle="2021 12th International Conference on Network of the Future (NoF) (NoF 2021)",
+  address="University of Coimbra, Portugal",
+  days=5,
+  month=oct,
+  year=2021,
 }
 ```
 
