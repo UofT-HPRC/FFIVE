@@ -1,0 +1,37 @@
+vnf1:                                   # Name of VNF
+    image: uofthprc/vnf1:latest         # Docker image of this VNF
+    resource:                           # Info of the board it is supposed to run on
+        vendor: fidus.com
+        device: sidewinder-100
+    replicas: 1                         # How many replicas of this to deploy
+    sources:                            # The name of the VNFs that feed this VNF, or remote vxlans
+        - IP: '10.10.1.1'
+          VNI: 123
+          Port: 234
+    destinations:                       # The name of the VNFs that this VNF feeds, or remote vxlans
+        - vnf3
+vnf2:
+    image: uofthprc/vnf2:latest         # Docker image of this VNF
+    resource:                           # Info of the board it is supposed to run on
+        vendor: fidus.com
+        device: sidewinder-100
+    replicas: 1                         # How many replicas of this to deploy
+    sources:                            # The name of the VNFs that feed this VNF, or remote vxlans
+        - IP: '10.10.1.2'
+          VNI: 124
+          Port: 234
+    destinations:                       # The name of the VNFs that this VNF feeds, or remote vxlans
+        - vnf3
+vnf3:
+    image: uofthprc/vnf3:latest         # Docker image of this VNF
+    resource:                           # Info of the board it is supposed to run on
+        vendor: fidus.com
+        device: sidewinder-100
+    replicas: 4                         # How many replicas of this to deploy
+    sources:                            # The name of the VNFs that feed this VNF, or remote vxlans
+        - vnf1
+        - vnf2
+    destinations:                       # The name of the VNFs that this VNF feeds, or remote vxlans
+        - IP: '10.10.1.3'
+          VNI: 125
+          Port: 234
