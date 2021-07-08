@@ -1,0 +1,12 @@
+[submodule "Node/Hardware/IPs/GULF-Stream"]
+	path = Node/Hardware/IPs/GULF-Stream
+	url = https://github.com/QianfengClarkShen/GULF-Stream.git
+[submodule "Node/Hardware/IPs/IPLibrary"]
+	path = Node/Hardware/IPs/IPLibrary
+	url = https://github.com/mewais/IPLibrary.git
+[submodule "Node/Software/docopt.cpp"]
+	path = Node/Software/docopt.cpp
+	url = https://github.com/docopt/docopt.cpp.git
+[submodule "Node/Hardware/IPs/FPGA-BPF"]
+	path = Node/Hardware/IPs/FPGA-BPF
+	url = https://github.com/UofT-HPRC/fpga-bpf.git
