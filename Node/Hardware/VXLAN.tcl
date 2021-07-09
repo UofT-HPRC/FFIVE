@@ -73,7 +73,7 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
         }
     } else {
         connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/network_rx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_0/S_AXIS]
-        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_0/network_out] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/network_tx]
+        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_0/network_out_V] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/network_tx]
     }
     connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_ctrl] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/s00_axi]
     connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/clk] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/s00_axi_aclk]
