@@ -69,7 +69,7 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
         connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reset] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/AXIS_switch/aresetn]
         for {set VXLAN_INDEX 0} {$VXLAN_INDEX < $VXLAN_COUNT} {incr VXLAN_INDEX} {
             connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/AXIS_Broadcaster/M0${VXLAN_INDEX}_AXIS] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_${VXLAN_INDEX}/S_AXIS]
-            connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/network_out] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/AXIS_switch/S0${VXLAN_INDEX}_AXIS]
+            connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/network_out_V] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/AXIS_switch/S0${VXLAN_INDEX}_AXIS]
         }
     } else {
         connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/network_rx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_0/S_AXIS]
@@ -81,13 +81,13 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
 
     for {set VXLAN_INDEX 0} {$VXLAN_INDEX < $VXLAN_COUNT} {incr VXLAN_INDEX} {
         # Connections
-        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_${VXLAN_INDEX}/M_AXIS] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/network_in]
-        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}_tx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/user_in]
-        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}_rx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/user_out]
+        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_${VXLAN_INDEX}/M_AXIS] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/network_in_V]
+        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}_tx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/user_in_V]
+        connect_bd_intf_net [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}_rx] [get_bd_intf_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/user_out_V]
         connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/clk] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_${VXLAN_INDEX}/aclk]
-        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/clk] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/ap_clk]
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/clk] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/aclk]
         connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reset] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reg_slice_${VXLAN_INDEX}/aresetn]
-        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reset] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/ap_rst_n]
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/reset] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/aresetn]
 
         set GPIO_INDEX1 [expr $VXLAN_INDEX * 4]
         set GPIO_INDEX2 [expr $GPIO_INDEX1 + 1]
@@ -97,10 +97,10 @@ for {set QSFP_INDEX 0} {$QSFP_INDEX < $QSFP_COUNT} {incr QSFP_INDEX} {
         set GPIO_INDEX2 [format %03s $GPIO_INDEX2]
         set GPIO_INDEX3 [format %03s $GPIO_INDEX3]
         set GPIO_INDEX4 [format %03s $GPIO_INDEX4]
-        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX1}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/ip_addr]
-        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX2}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/local_port]
-        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX3}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/remote_port]
-        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX4}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/vni]
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX1}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/ip_addr_V]
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX2}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/local_port_V]
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX3}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/remote_port_V]
+        connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX4}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/VXLAN_${VXLAN_INDEX}/vni_V]
         
         connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX1}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX1}_IN]
         connect_bd_net [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX2}_OUT] [get_bd_pins VXLAN/VXLAN_${QSFP_INDEX}/GPIO_net/GPIO_${GPIO_INDEX2}_IN]

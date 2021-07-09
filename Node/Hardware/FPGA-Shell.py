@@ -484,15 +484,25 @@ with open("IPs/VXLAN-bridge/VXLAN_bridge.tcl", "w") as script:
     print("""open_project vxlan_bridge
 set_top vxlan_bridge
 add_files vxlan_bridge.cpp
-open_solution \"solution1\" -flow_target vivado
-set_part {""" + FPGA + """}
+open_solution \"solution1\"
+set_part {""" + FPGA + """} -tool vivado
 create_clock -period 3 -name default
-config_compile
-config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
-config_rtl -encoding onehot -reset all -reset_level low
+config_rtl -reset all -reset_level low
 csynth_design
-export_design -rtl verilog -format ip_catalog
+export_design -rtl verilog
 exit""", file=script)
+#     print("""open_project vxlan_bridge
+# set_top vxlan_bridge
+# add_files vxlan_bridge.cpp
+# open_solution \"solution1\" -flow_target vivado
+# set_part {""" + FPGA + """}
+# create_clock -period 3 -name default
+# config_compile
+# config_export -format ip_catalog -rtl verilog -vivado_phys_opt place -vivado_report_level 0
+# config_rtl -encoding onehot -reset all -reset_level low
+# csynth_design
+# export_design -rtl verilog -format ip_catalog
+# exit""", file=script)
 
 try:
     subprocess.run("git submodule init", shell=True, check=True)
@@ -509,7 +519,8 @@ try:
     subprocess.run("cd IPs/IPLibrary && make AXI4-RAM -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4-GPIO -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
     subprocess.run("cd IPs/IPLibrary && make AXI4S-Replicator -j" + str(multiprocessing.cpu_count()), shell=True, check=True)
-    subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vitis_hls VXLAN_bridge.tcl", shell=True, check=True)
+    # subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vitis_hls VXLAN_bridge.tcl", shell=True, check=True)
+    subprocess.run("cd IPs/VXLAN-bridge && rm vxlan_bridge/ -rf && vivado_hls VXLAN_bridge.tcl", shell=True, check=True)
     print_success("Built prerequisite IPs.")
 except subprocess.SubprocessError as e:
     print_error("Could not build prerequisite IPs: " + str(e))
