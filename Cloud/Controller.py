@@ -10,6 +10,7 @@ import json
 import requests
 import random
 import logging
+import threading
 
 with open('/var/run/secrets/kubernetes.io/serviceaccount/token', 'r') as file:
     header = file.read()
@@ -18,8 +19,15 @@ VERIFY = '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
 HEADER = {'Authorization': 'Bearer ' + header}
 
 POD_IPS = {}
-CONFIGS = {}
+IP_CONFIGS = {}
+VXLAN_CONFIGS = {}
+MAP = {}
 FAILURES = {}
+
+MUTEX = threading.Lock()
+CIDR = {}
+CONFIG = {}
+IPs = {}
 
 app = flask.Flask(__name__)
 
@@ -265,88 +273,89 @@ def verify_VNFs(config):
             POD_IPS[name + suffix] = response['status']['podIP']
             FAILURES[name + suffix] = 0
 
-def configure_VNFs(config, IPs, VNIs):
-
-    def send_VXLAN_config(name, suffix, network, index, payload):
-        url = 'http://' + POD_IPS[name + suffix] + ':5000/VXLAN/' + str(network) + '/' + str(index)
-        logging.info('Configuring ' + name + suffix + '\'s network ' + str(network) + '-' + str(index) + ' with:')
-        logging.info('\t' + str(payload))
-        if name + suffix not in CONFIGS:
-            CONFIGS[name + suffix] = []
-        CONFIGS[name + suffix].append((url, payload))
-        try:
-            response = requests.put(url, json=payload)
-            if response.status_code < 200 or response.status_code >= 300:
-                logging.error('Failed to configure VXLAN of pod ' + name + suffix)
-                logging.error('Details: ')
-                logging.error(response.status_code)
-                logging.error(POD_IPS[name + suffix])
-                logging.error(response.text)
-                delete_VNFs(config)
-                exit(12)
-        except requests.exceptions.RequestException as e:
+def send_VXLAN_config(name, suffix, network, index, payload):
+    global VXLAN_CONFIGS
+    url = 'http://' + POD_IPS[name + suffix] + ':5000/VXLAN/' + str(network) + '/' + str(index)
+    logging.info('Configuring ' + name + suffix + '\'s network ' + str(network) + '-' + str(index) + ' with:')
+    logging.info('\t' + str(payload))
+    if name + suffix not in VXLAN_CONFIGS:
+        VXLAN_CONFIGS[name + suffix] = {}
+    if network not in VXLAN_CONFIGS[name + suffix]:
+        VXLAN_CONFIGS[name + suffix][network] = {}
+    VXLAN_CONFIGS[name + suffix][network][index] = (url, payload)
+    try:
+        response = requests.put(url, json=payload)
+        if response.status_code < 200 or response.status_code >= 300:
             logging.error('Failed to configure VXLAN of pod ' + name + suffix)
-            logging.error('Caused by:')
+            logging.error('Details: ')
+            logging.error(response.status_code)
             logging.error(POD_IPS[name + suffix])
-            logging.error(str(e))
+            logging.error(response.text)
             delete_VNFs(config)
             exit(12)
+    except requests.exceptions.RequestException as e:
+        logging.error('Failed to configure VXLAN of pod ' + name + suffix)
+        logging.error('Caused by:')
+        logging.error(POD_IPS[name + suffix])
+        logging.error(str(e))
+        delete_VNFs(config)
+        exit(12)
 
-    def send_IP_config(name, suffix, network, IP):
-        url = 'http://' + POD_IPS[name + suffix] + ':5000/UDP/' + str(network)
-        logging.info('Configuring ' + name + suffix + '\'s network ' + str(network) + ' with IP: ' + IP)
-        if name + suffix not in CONFIGS:
-            CONFIGS[name + suffix] = []
-        CONFIGS[name + suffix].append((url, {'ip': IP}))
-        try:
-            response = requests.put(url, json={'ip': IP})
-            if response.status_code < 200 or response.status_code >= 300:
-                logging.error('Failed to configure IP of pod ' + name + suffix)
-                logging.error('Details: ')
-                logging.error(response.status_code)
-                logging.error(POD_IPS[name + suffix])
-                logging.error(response.text)
-                delete_VNFs(config)
-                exit(13)
-        except requests.exceptions.RequestException as e:
+def send_IP_config(name, suffix, network, IP):
+    global IP_CONFIGS
+    url = 'http://' + POD_IPS[name + suffix] + ':5000/UDP/' + str(network)
+    logging.info('Configuring ' + name + suffix + '\'s network ' + str(network) + ' with IP: ' + IP)
+    if name + suffix not in IP_CONFIGS:
+        IP_CONFIGS[name + suffix] = {}
+    IP_CONFIGS[name + suffix][network] = (url, {'ip': IP})
+    try:
+        response = requests.put(url, json={'ip': IP})
+        if response.status_code < 200 or response.status_code >= 300:
             logging.error('Failed to configure IP of pod ' + name + suffix)
-            logging.error('Caused by:')
+            logging.error('Details: ')
+            logging.error(response.status_code)
             logging.error(POD_IPS[name + suffix])
-            logging.error(str(e))
+            logging.error(response.text)
             delete_VNFs(config)
             exit(13)
+    except requests.exceptions.RequestException as e:
+        logging.error('Failed to configure IP of pod ' + name + suffix)
+        logging.error('Caused by:')
+        logging.error(POD_IPS[name + suffix])
+        logging.error(str(e))
+        delete_VNFs(config)
+        exit(13)
 
-    def send_init(name, suffix):
-        url = 'http://' + POD_IPS[name + suffix] + ':5000/Init'
-        logging.info('Initializing ' + name + suffix)
-        if name + suffix not in CONFIGS:
-            CONFIGS[name + suffix] = []
-        CONFIGS[name + suffix].append((url, {}))
-        try:
-            response = requests.put(url, json={})
-            if response.status_code < 200 or response.status_code >= 300:
-                logging.error('Failed to initialize pod ' + name + suffix)
-                logging.error('Details: ')
-                logging.error(response.status_code)
-                logging.error(POD_IPS[name + suffix])
-                logging.error(response.text)
-                delete_VNFs(config)
-                exit(13)
-        except requests.exceptions.RequestException as e:
+def send_init(name, suffix):
+    url = 'http://' + POD_IPS[name + suffix] + ':5000/Init'
+    logging.info('Initializing ' + name + suffix)
+    try:
+        response = requests.put(url, json={})
+        if response.status_code < 200 or response.status_code >= 300:
             logging.error('Failed to initialize pod ' + name + suffix)
-            logging.error('Caused by:')
+            logging.error('Details: ')
+            logging.error(response.status_code)
             logging.error(POD_IPS[name + suffix])
-            logging.error(str(e))
+            logging.error(response.text)
             delete_VNFs(config)
             exit(13)
+    except requests.exceptions.RequestException as e:
+        logging.error('Failed to initialize pod ' + name + suffix)
+        logging.error('Caused by:')
+        logging.error(POD_IPS[name + suffix])
+        logging.error(str(e))
+        delete_VNFs(config)
+        exit(13)
 
-    def unique_VNI(VNIs):
-        while True:
-            VNI = random.randint(0, (2**24)-1)
-            if VNI not in VNIs:
-                VNIs.append(VNI)
-                return VNI
+def unique_VNI(VNIs):
+    while True:
+        VNI = random.randint(0, (2**24)-1)
+        if VNI not in VNIs:
+            VNIs.append(VNI)
+            return VNI
 
+def configure_VNFs(config, IPs, VNIs):
+    global MAP
     assigned_IPs = {}
     assigned_VNIs = {}
     # Now that everything is deployed and works, we should start assigining IPs
@@ -407,6 +416,9 @@ def configure_VNFs(config, IPs, VNIs):
                         # Configure this VXLAN bridge on the VNF pod
                         payload = {'IP': target_IP, 'VNI': str(VNI), 'Local Port': '3030', 'Remote Port': '3030'}
                         send_VXLAN_config(name, suffix, 0, source_index, payload)
+                        if item+target_suffix not in MAP:
+                            MAP[item+target_suffix] = {}
+                        MAP[item+target_suffix][name+suffix] = (0, source_index)
             source_index += 1
     # Handle all the destination VXLANs
     for name, details in config.items():
@@ -452,39 +464,47 @@ def configure_VNFs(config, IPs, VNIs):
                         payload = {'IP': target_IP, 'VNI': str(VNI), 'Local Port': '3030', 'Remote Port': '3030'}
                         send_VXLAN_config(name, suffix, 1, destination_index, payload)
                         send_init(name, suffix)
-            destination_index += 1   
+                        if name + suffix not in MAP:
+                            MAP[name + suffix] = {}
+                        MAP[name+suffix][item+target_suffix] = (1, destination_index)
+            destination_index += 1
 
 def reconfigure_VNF(name):
     def send_config(name, url, payload):
         try:
             response = requests.put(url, json=payload)
             if response.status_code < 200 or response.status_code >= 300:
-                logging.error('Failed to reconfigure pod ' + name + suffix)
+                logging.error('Failed to reconfigure pod ' + name)
                 logging.error('Details: ')
                 logging.error(response.status_code)
-                logging.error(POD_IPS[name + suffix])
+                logging.error(POD_IPS[name])
                 logging.error(response.text)
                 delete_VNFs(config)
                 exit(12)
         except requests.exceptions.RequestException as e:
-            logging.error('Failed to reconfigure pod ' + name + suffix)
+            logging.error('Failed to reconfigure pod ' + name)
             logging.error('Caused by:')
-            logging.error(POD_IPS[name + suffix])
+            logging.error(POD_IPS[name])
             logging.error(str(e))
             delete_VNFs(config)
             exit(12)
     time.sleep(5)
     logging.info('Reconfiguring ' + name + '\'s interfaces')
-    if name not in CONFIGS:
+    if name not in IP_CONFIGS or name not in VXLAN_CONFIGS:
         logging.error('Cannot find configuration for pod ' + name)
         delete_VNFs(config)
         exit(15)
-    for config in CONFIGS[name]:
-        send_config(name, config[0], config[1])
+    for network in IP_CONFIGS[name]:
+        send_config(name, IP_CONFIGS[name][network][0], IP_CONFIGS[name][network][1])
+    for network in VXLAN_CONFIGS[name]:
+        for index in VXLAN_CONFIGS[name][network]:
+            send_config(name, VXLAN_CONFIGS[name][network][index][0], IP_CONFIGS[name][network][index][1])
 
 def check_health(config):
+    global MUTEX
     # Now that everything is deployed, we should wait for all VNFs to start up
     while True:
+        MUTEX.acquire()
         for name, details in config.items():
             for i in range(details['replicas']):
                 if i == 0 and details['replicas'] == 1:
@@ -504,21 +524,125 @@ def check_health(config):
                     logging.warning('Pod ' + name + suffix + ' has restarted. Reconfiguring.')
                     FAILURES[name + suffix] = response['status']['containerStatuses'][0]['restartCount']
                     reconfigure_VNF(name + suffix)
+        MUTEX.release()
+
+@app.route('/Config/<string:vnf1>/<string:vnf2>/Disconnect'. method=['GET'])
+def disconnect_vnfs(vnf1, vnf2):
+    global CONFIG
+    global MUTEX
+    MUTEX.acquire()
+    payload = {'IP': '0.0.0.0', 'VNI': '0', 'Local Port': '0', 'Remote Port': '0'}
+    for i in range(CONFIG[vnf1]['replicas']):
+        for j in range(CONFIG[vnf2]['replicas']):
+            if i == 0 and CONFIG[vnf1]['replicas'] == 1:
+                suffix1 = ''
+            else:
+                suffix1 = '-' + str(i)
+            if j == 0 and CONFIG[vnf2]['replicas'] == 1:
+                suffix2 = ''
+            else:
+                suffix2 = '-' + str(j)
+            net1 = MAP[vnf1 + suffix1][vnf2 + suffix2][0]
+            index1 = MAP[vnf1 + suffix1][vnf2 + suffix2][1]
+            net2 = MAP[vnf2 + suffix2][vnf1 + suffix1][0]
+            index2 = MAP[vnf2 + suffix2][vnf1 + suffix1][1]
+            send_VXLAN_CONFIG(vnf1, suffix1, net1, index1, payload)
+            send_VXLAN_CONFIG(vnf2, suffix2, net2, index2, payload)
+    CONFIG[vnf1]['destinations'].remove(vnf2)
+    CONFIG[vnf2]['sources'].remove(vnf1)
+    MUTEX.release()
+    return flask.jsonify(CONFIG)
+
+@app.route('/Config/<string:vnf1>/<string:vnf2>/Connect/<int:index1>/<int:index2>'. method=['GET'])
+def connect_vnfs(vnf1, vnf2, index1, index2):
+    global CONFIG
+    global MUTEX
+    empty_payload = {'IP': '0.0.0.0', 'VNI': '0', 'Local Port': '0', 'Remote Port': '0'}
+    MUTEX.acquire()
+    for i in range(CONFIG[vnf1]['replicas']):
+        for j in range(CONFIG[vnf2]['replicas']):
+            VNI = unique_VNI(VNIs)
+            if i == 0 and CONFIG[vnf1]['replicas'] == 1:
+                suffix1 = ''
+            else:
+                suffix1 = '-' + str(i)
+            if j == 0 and CONFIG[vnf2]['replicas'] == 1:
+                suffix2 = ''
+            else:
+                suffix2 = '-' + str(j)
+            # Configure this VXLAN bridge on the VNF pod
+            payload = {'IP': target_IP, 'VNI': str(VNI), 'Local Port': '3030', 'Remote Port': '3030'}
+            send_VXLAN_CONFIG(vnf1, suffix1, 1, index1, payload)
+            send_VXLAN_CONFIG(vnf2, suffix2, 0, index2, payload)
+            if item+target_suffix not in MAP:
+                MAP[item+target_suffix] = {}
+            MAP[vnf1+suffix1][vnf2+suffix2] = (1, index1)
+            MAP[vnf2+suffix2][vnf1+suffix1] = (0, index2)
+    CONFIG[vnf1]['destinations'].append(vnf2)
+    CONFIG[vnf2]['sources'].append(vnf1)
+    MUTEX.release()
+    return flask.jsonify(CONFIG)
+
+@app.route('/Config/<string:vnf>/Delete'. method=['GET'])
+def delete_vnf(vnf):
+    global CONFIG
+    global MUTEX
+    MUTEX.acquire()
+    delete_VNF(vnf)
+    del CONFIG[vnf]
+    MUTEX.release()
+    return flask.jsonify(CONFIG)
+
+@app.route('/Config/<string:vnf>/Create'. method=['PUT'])
+def create_vnf(vnf):
+    global CONFIG
+    global MUTEX
+    config = flask.request.get_json(force=True)
+    MUTEX.acquire()
+    deploy_VNFs(config)
+    CONFIG[vnf] = config
+    MUTEX.release()
+    return flask.jsonify(CONFIG)
+
+@app.route('/Config', method=['GET', 'PUT'])
+def config():
+    global CONFIG
+    global CIDR
+    global IPs
+    global MUTEX
+    if flask.request.method == 'PUT':
+        config = flask.request.get_json(force=True)
+        MUTEX.acquire()
+        VNIs = verify_config(config, CIDR, IPs)
+        delete_VNFs(CONFIG)
+        deploy_VNFs(config)
+        verify_VNFs(config)
+        time.sleep(5)
+        configure_VNFs(config, IPs, VNIs)
+        CONFIG = config
+        MUTEX.release()
+    return flask.jsonify(CONFIG)
 
 if __name__ == '__main__':
+    global CONFIG
+    global CIDR
+    global IPs
     logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARNING)
     args = parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.INFO)
     else:
         logging.basicConfig(level=logging.WARNING)
-    IPs = create_IPs(args.cidr)
-    config = read_config(args.config)
-    VNIs = verify_config(config, args.cidr, IPs)
+    CIDR = args.cidr
+    IPs = create_IPs(CIDR)
+    CONFIG = read_config(args.config)
+    VNIs = verify_config(CONFIG, CIDR, IPs)
     if args.debug:
         deploy_debug()
-    deploy_VNFs(config)
-    verify_VNFs(config)
+    deploy_VNFs(CONFIG)
+    verify_VNFs(CONFIG)
     time.sleep(5)
-    configure_VNFs(config, IPs, VNIs)
-    check_health(config)
+    configure_VNFs(CONFIG, IPs, VNIs)
+    check_thread = threading.Thread(target=check_health, args=(CONFIG,))
+    check_thread.start()
+    app.run(host='0.0.0.0')
