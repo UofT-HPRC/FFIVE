@@ -301,6 +301,28 @@ def send_VXLAN_config(name, suffix, network, index, payload):
         delete_VNFs(config)
         exit(12)
 
+def recv_IP_config(name, suffix, network):
+    global IP_CONFIGS
+    url = 'http://' + POD_IPS[name + suffix] + ':5000/UDP/' + str(network)
+    try:
+        response = requests.get(url)
+        if response.status_code < 200 or response.status_code >= 300:
+            logging.error('Failed to read IP of pod ' + name + suffix)
+            logging.error('Details: ')
+            logging.error(response.status_code)
+            logging.error(POD_IPS[name + suffix])
+            logging.error(response.text)
+            delete_VNFs(config)
+            exit(13)
+    except requests.exceptions.RequestException as e:
+        logging.error('Failed to read IP of pod ' + name + suffix)
+        logging.error('Caused by:')
+        logging.error(POD_IPS[name + suffix])
+        logging.error(str(e))
+        delete_VNFs(config)
+        exit(13)
+    return resonse.json()['IP']
+
 def send_IP_config(name, suffix, network, IP):
     global IP_CONFIGS
     url = 'http://' + POD_IPS[name + suffix] + ':5000/UDP/' + str(network)
@@ -557,7 +579,6 @@ def disconnect_vnfs(vnf1, vnf2):
 def connect_vnfs(vnf1, vnf2, index1, index2):
     global CONFIG
     global MUTEX
-    empty_payload = {'IP': '0.0.0.0', 'VNI': '0', 'Local Port': '0', 'Remote Port': '0'}
     MUTEX.acquire()
     for i in range(CONFIG[vnf1]['replicas']):
         for j in range(CONFIG[vnf2]['replicas']):
@@ -571,8 +592,11 @@ def connect_vnfs(vnf1, vnf2, index1, index2):
             else:
                 suffix2 = '-' + str(j)
             # Configure this VXLAN bridge on the VNF pod
-            payload = {'IP': target_IP, 'VNI': str(VNI), 'Local Port': '3030', 'Remote Port': '3030'}
+            IP = recv_IP_config(vnf2, suffix2, 0)
+            payload = {'IP': IP, 'VNI': str(VNI), 'Local Port': '3030', 'Remote Port': '3030'}
             send_VXLAN_CONFIG(vnf1, suffix1, 1, index1, payload)
+            IP = recv_IP_config(vnf1, suffix1, 1)
+            payload = {'IP': IP, 'VNI': str(VNI), 'Local Port': '3030', 'Remote Port': '3030'}
             send_VXLAN_CONFIG(vnf2, suffix2, 0, index2, payload)
             if item+target_suffix not in MAP:
                 MAP[item+target_suffix] = {}
