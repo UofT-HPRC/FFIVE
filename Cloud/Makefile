@@ -1,4 +1,4 @@
-all: prereqs Dockerfile config.yaml Makefile
+all: prereqs Dockerfile Config.yaml Makefile
 	read -p "Enter user name (for example: uofthprc): " name && \
 	read -p "Enter image tag (for example: latest): " tag && \
 	docker build -t $$name/sdn-controller:$$tag . && \
@@ -6,5 +6,5 @@ all: prereqs Dockerfile config.yaml Makefile
 	perl -pi -e "s/uofthprc/$$name/gi;" Deploy.yaml && \
 	perl -pi -e "s/latest/$$tag/gi;" Deploy.yaml
 
-prereqs: controller.py
+prereqs: Controller.py
 	pipreqs . --force

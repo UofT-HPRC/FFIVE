@@ -548,7 +548,7 @@ def check_health(config):
                     reconfigure_VNF(name + suffix)
         MUTEX.release()
 
-@app.route('/Config/<string:vnf1>/<string:vnf2>/Disconnect'. method=['GET'])
+@app.route('/Config/<string:vnf1>/<string:vnf2>/Disconnect', method=['GET'])
 def disconnect_vnfs(vnf1, vnf2):
     global CONFIG
     global MUTEX
@@ -575,7 +575,7 @@ def disconnect_vnfs(vnf1, vnf2):
     MUTEX.release()
     return flask.jsonify(CONFIG)
 
-@app.route('/Config/<string:vnf1>/<string:vnf2>/Connect/<int:index1>/<int:index2>'. method=['GET'])
+@app.route('/Config/<string:vnf1>/<string:vnf2>/Connect/<int:index1>/<int:index2>', method=['GET'])
 def connect_vnfs(vnf1, vnf2, index1, index2):
     global CONFIG
     global MUTEX
@@ -607,7 +607,7 @@ def connect_vnfs(vnf1, vnf2, index1, index2):
     MUTEX.release()
     return flask.jsonify(CONFIG)
 
-@app.route('/Config/<string:vnf>/Delete'. method=['GET'])
+@app.route('/Config/<string:vnf>/Delete', method=['GET'])
 def delete_vnf(vnf):
     global CONFIG
     global MUTEX
@@ -617,7 +617,7 @@ def delete_vnf(vnf):
     MUTEX.release()
     return flask.jsonify(CONFIG)
 
-@app.route('/Config/<string:vnf>/Create'. method=['PUT'])
+@app.route('/Config/<string:vnf>/Create', method=['PUT'])
 def create_vnf(vnf):
     global CONFIG
     global MUTEX
