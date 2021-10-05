@@ -60,6 +60,7 @@ int main(int argc, char **argv) {
     int ret = 0;
     FILE *codefile = NULL;
     char *data = NULL;
+    int len = 0;
 
     int en_fix = 0;
     uint32_t testendian = 1;
@@ -87,7 +88,7 @@ int main(int argc, char **argv) {
     }
     
     fseek(codefile, 0, SEEK_END);
-    int len = ftell(codefile);
+    len = ftell(codefile);
     rewind(codefile);
     
     fd = open("/dev/mem", O_RDWR | O_SYNC);
@@ -96,7 +97,7 @@ int main(int argc, char **argv) {
         goto cleanup;
     }
     
-    data = malloc(len);
+    data = (char*)malloc(len);
     if (data == NULL) {
         perror("Could not allocate buffer");
         ret = -1;
