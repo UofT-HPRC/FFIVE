@@ -64,13 +64,12 @@ Run `make Container`. It will query you for the image name and tag. This will co
 # Dependencies
 ## Software Dependencies
 These are dependencies you need to have installed before using the framework.
-1. Vivado 2020.2
-2. Vivado 2018.3 (Currently being phased out)
-3. Docker
-4. Git
-5. GCC/G++
-6. Docker
-7. Kubernetes
+1. Vivado 2020.2 and 2018.3 (Due to bugs in Vivado 2018.3 and 2019.X, our work was split to using vivado_hls from 2018.3, and vivado from 2020.2)
+2. Docker
+3. Git
+4. GCC/G++
+5. Docker
+6. Kubernetes
 
 ## Source Code Dependencies
 These dependencies are already included in the code, you do not need to install any of them.
